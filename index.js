@@ -6,6 +6,12 @@ var bodyParser = require('body-parser');
 var request = require('request');
 var cheerio = require('cheerio');
 
+var mysql = require('mysql');
+
+// var db = require('./db');
+// db.user.loadDatabase();
+// db.class.loadDatabase();
+
 var app = express();
 app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
@@ -26,34 +32,24 @@ var form = {
     form: param
 };
 
-app.get('/register', function (req, res) {
-    console.log(req.body);
-    // var mssv = req.body.mssv;
-    var mssv = 13020285;
+app.post('/register', function (req, res) {
+    console.log("req: ", req.body.toString());
+    var mssv = req.body.mssv;
+    var email = req.body.email;
     form.form.keysearch = mssv;
 
-    //
-    request.post(form, function (err, response, body) {
-        res.end(body);
-
-        // parser lop mon hoc
-        var $ = cheerio.load(body);
-        var trArr = $('tbody > tr').next();
-
-        console.log(trArr);
-
-        // for (var i=1; i<tdArr.length; i++){
-        //     // console.log( cheerio.load(trArr[i])('td').text());
-        //     console.log(tdArr[i].find('td'));
-        // }
-    });
+    postWithMssv(mssv, req, res);
 });
 
-function postWithMssv(mssv) {
+function postWithMssv(mssv, req, res) {
     form.form.keysearch = mssv;
 
     //
     request.post(form, function (err, response, body) {
+
+        if (err || response.statusCode != 200) {
+            return;
+        }
 
         // parser lop mon hoc
         var $ = cheerio.load(body, {
@@ -61,26 +57,93 @@ function postWithMssv(mssv) {
         });
         var trArr = $('tbody > tr');
 
-        for (var i = 0; i < trArr.length; i++) {
-            var trTemp = $(trArr[i]);
-            var tdArr = trTemp.children('td');
+        if (trArr.length <= 1) {
+            console.log("Khong ton tai mssv");
 
-            var chooseTd = $(tdArr[6]);
+            return;
+        }
 
-            if (chooseTd.text().length != 0) {
-                var classId = chooseTd.text().trim();
-                if (classId.length > 0) {
-                    console.log(classId);
+        // Kiem tra email user, neu user ton tai thi thong bao kiem tra lai hom mail
+        // Neu ko ton tai thi tao 1 user trong csdl moi va thong bao check mail
+        // them user
+
+        var userSql = {
+            id : '',
+            email : req.body.email,
+            mssv : req.body.mssv,
+            isactive : false
+        };
+
+        connection.query("INSERT INTO user SET ?", userSql, function (err, result) {
+            if (err){
+                console.log("loi cmnr");
+            } else{
+                for (var i = 0; i < trArr.length; i++) {
+                    var trTemp = $(trArr[i]);
+                    var tdArr = trTemp.children('td');
+
+                    var chooseTd = $(tdArr[6]);
+
+                    if (chooseTd.text().length != 0) {
+                        var classId = chooseTd.text().toString().trim();
+                        classId = classId.replace(" ", "");
+                        classId = classId.toLowerCase();
+                        if (classId.length > 0) {
+                            console.log(classId);
+                            var classTemp = {
+                                id : "",
+                                idclass : classId,
+                                name: '',
+                                ishasscore: false
+                            };
+
+                            connection.query("INSERT INTO class SET ?", classTemp, function (err, result) {
+                                if (err){
+                                    console.log("loi cmnr");
+                                }
+                                // console.log(JSON.stringify(result));
+                            });
+
+                            var userClass = {
+                                email : req.body.email,
+                                idclass: classId,
+                                issendmail : false
+                            };
+
+                            // user-class
+                            connection.query("INSERT INTO user_class SET ?", userClass, function (err, result) {
+                                if (err){
+                                    console.log("loi cmnr");
+                                }
+                                // console.log(JSON.stringify(result));
+                            });
+                        }
+                    }
                 }
             }
-        }
+        });
+
+        //lay du lieu user tu web mon thi nhet vao classes.db
     });
 }
 
+/////// connection
 
-// app.listen(2345, function () {
-//     console.log("listening on 2345");
-// });
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'score-uet'
+});
+
+connection.connect(function (err) {
+    if(err) throw err;
+    console.log("Connected to mysql!");
+
+    app.listen(2345, function () {
+        console.log("listening on 2345");
+    });
+});
 
 // test 
-postWithMssv('13020285');
+// postWithMssv('13020285');
