@@ -94,11 +94,7 @@ function postWithMssv(mssv, req, res) {
                                 ishasscore: false
                             };
 
-                            connection.query("INSERT INTO class SET ?", classTemp, function (err, result) {
-                                if (err){
-                                    // console.log("loi cmnr");
-                                }
-                            });
+                            connection.query("INSERT INTO class SET ?", classTemp, function (err, result) {});
 
                             var userClass = {
                                 email : req.body.email,
@@ -107,11 +103,7 @@ function postWithMssv(mssv, req, res) {
                             };
 
                             // user-class
-                            connection.query("INSERT INTO user_class SET ?", userClass, function (err, result) {
-                                if (err){
-                                    // console.log("loi cmnr");
-                                }
-                            });
+                            connection.query("INSERT INTO user_class SET ?", userClass, function (err, result) {});
                         }
                     }
                 }
