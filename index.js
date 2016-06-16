@@ -5,12 +5,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
 var cheerio = require('cheerio');
-
 var mysql = require('mysql');
-
-// var db = require('./db');
-// db.user.loadDatabase();
-// db.class.loadDatabase();
 
 var app = express();
 app.use(bodyParser());
@@ -33,7 +28,6 @@ var form = {
 };
 
 app.post('/register', function (req, res) {
-    console.log("req: ", req.body.toString());
     var mssv = req.body.mssv;
     var email = req.body.email;
     form.form.keysearch = mssv;
@@ -59,13 +53,8 @@ function postWithMssv(mssv, req, res) {
 
         if (trArr.length <= 1) {
             console.log("Khong ton tai mssv");
-
             return;
         }
-
-        // Kiem tra email user, neu user ton tai thi thong bao kiem tra lai hom mail
-        // Neu ko ton tai thi tao 1 user trong csdl moi va thong bao check mail
-        // them user
 
         var userSql = {
             id : '',
@@ -101,7 +90,6 @@ function postWithMssv(mssv, req, res) {
                                 if (err){
                                     console.log("loi cmnr");
                                 }
-                                // console.log(JSON.stringify(result));
                             });
 
                             var userClass = {
@@ -115,15 +103,12 @@ function postWithMssv(mssv, req, res) {
                                 if (err){
                                     console.log("loi cmnr");
                                 }
-                                // console.log(JSON.stringify(result));
                             });
                         }
                     }
                 }
             }
         });
-
-        //lay du lieu user tu web mon thi nhet vao classes.db
     });
 }
 
@@ -144,6 +129,3 @@ connection.connect(function (err) {
         console.log("listening on 2345");
     });
 });
-
-// test 
-// postWithMssv('13020285');
