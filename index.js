@@ -65,8 +65,16 @@ function postWithMssv(mssv, req, res) {
 
         connection.query("INSERT INTO user SET ?", userSql, function (err, result) {
             if (err){
-                console.log("loi cmnr");
+                // console.log("loi cmnr");
             } else{
+                // response
+                res.end("Check mail de hoan thanh nv!");
+
+                // send mail
+
+
+
+
                 for (var i = 0; i < trArr.length; i++) {
                     var trTemp = $(trArr[i]);
                     var tdArr = trTemp.children('td');
@@ -78,7 +86,7 @@ function postWithMssv(mssv, req, res) {
                         classId = classId.replace(" ", "");
                         classId = classId.toLowerCase();
                         if (classId.length > 0) {
-                            console.log(classId);
+                            // console.log(classId);
                             var classTemp = {
                                 id : "",
                                 idclass : classId,
@@ -88,7 +96,7 @@ function postWithMssv(mssv, req, res) {
 
                             connection.query("INSERT INTO class SET ?", classTemp, function (err, result) {
                                 if (err){
-                                    console.log("loi cmnr");
+                                    // console.log("loi cmnr");
                                 }
                             });
 
@@ -101,7 +109,7 @@ function postWithMssv(mssv, req, res) {
                             // user-class
                             connection.query("INSERT INTO user_class SET ?", userClass, function (err, result) {
                                 if (err){
-                                    console.log("loi cmnr");
+                                    // console.log("loi cmnr");
                                 }
                             });
                         }
