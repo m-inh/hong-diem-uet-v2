@@ -31,7 +31,7 @@ app.get('/register', function (req, res) {
     // var mssv = req.body.mssv;
     var mssv = 13020285;
     form.form.keysearch = mssv;
-    
+
     //
     request.post(form, function (err, response, body) {
         res.end(body);
@@ -56,19 +56,21 @@ function postWithMssv(mssv) {
     request.post(form, function (err, response, body) {
 
         // parser lop mon hoc
-        var $ = cheerio.load(body);
+        var $ = cheerio.load(body, {
+            decodeEntities: true
+        });
         var trArr = $('tbody > tr');
 
-        for (var i=0; i<trArr.length; i++){
+        for (var i = 0; i < trArr.length; i++) {
             var trTemp = $(trArr[i]);
             var tdArr = trTemp.children('td');
 
             var chooseTd = $(tdArr[6]);
-            
-            if (chooseTd.text().length != 0){
-                var classId = chooseTd.text().toString();
-                if (classId.length > 0){
-                    console.log(classId.toString());
+
+            if (chooseTd.text().length != 0) {
+                var classId = chooseTd.text().trim();
+                if (classId.length > 0) {
+                    console.log(classId);
                 }
             }
         }
