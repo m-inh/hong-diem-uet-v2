@@ -63,7 +63,7 @@ app.get('/active/:token', function (req, res) {
     });
 });
 
-app.get('/getInfor', function (req, res) {
+app.get('/api/getInfor', function (req, res) {
     var url_parts = url.parse(req.url, true);
     var queries = url_parts.query;
 
