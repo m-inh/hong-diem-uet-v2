@@ -49,9 +49,11 @@ app.get('/active/:token', function (req, res) {
                 if (err) {
                     res.end("Something went wrong!");
                 } else {
-                    res.end("Active thanh cong");
+                    res.end("Xac thuc thanh cong, cam on ban da su dung dich vu :D");
                 }
             });
+        } else {
+            res.end("Something went wrong!");
         }
     });
 });
@@ -74,6 +76,7 @@ function postWithMssv(mssv, req, res) {
 
         if (trArr.length <= 1) {
             console.log("Khong ton tai mssv");
+            res.end("Khong ton tai mssv");
             return;
         }
 
@@ -91,53 +94,99 @@ function postWithMssv(mssv, req, res) {
 
             connection.query("INSERT INTO user SET ?", userSql, function (err, result) {
                 if (err) {
-                    // console.log("loi cmnr");
+                    // console.log("Khong ton tai mssv");
+                    res.end("Email nay da co nguoi dang ki");
                 } else {
                     // response
                     var linkActive = url_host + "/active/" + token;
                     console.log('link: ' + linkActive);
-                    res.end("Check mail de hoan thanh nv!");
 
-                    // send mail
+                    sendEmailActive(" bạn", "fries.uet@gmail.com", req.body.email, linkActive, function (err) {
+                        if (err) {
+                            res.end("Something went wrong!");
+                        } else {
+                            res.end("Check mail de hoan thanh nv!");
 
+                            for (var i = 0; i < trArr.length; i++) {
+                                var trTemp = $(trArr[i]);
+                                var tdArr = trTemp.children('td');
 
-                    for (var i = 0; i < trArr.length; i++) {
-                        var trTemp = $(trArr[i]);
-                        var tdArr = trTemp.children('td');
+                                var chooseTd = $(tdArr[6]);
 
-                        var chooseTd = $(tdArr[6]);
+                                if (chooseTd.text().length != 0) {
+                                    var classId = chooseTd.text().toString().trim();
+                                    classId = classId.replace(" ", "");
+                                    classId = classId.toLowerCase();
+                                    if (classId.length > 0) {
+                                        // console.log(classId);
+                                        var classTemp = {
+                                            id: "",
+                                            idclass: classId,
+                                            name: '',
+                                            ishasscore: false
+                                        };
 
-                        if (chooseTd.text().length != 0) {
-                            var classId = chooseTd.text().toString().trim();
-                            classId = classId.replace(" ", "");
-                            classId = classId.toLowerCase();
-                            if (classId.length > 0) {
-                                // console.log(classId);
-                                var classTemp = {
-                                    id: "",
-                                    idclass: classId,
-                                    name: '',
-                                    ishasscore: false
-                                };
+                                        connection.query("INSERT INTO class SET ?", classTemp, function (err, result) {
+                                        });
 
-                                connection.query("INSERT INTO class SET ?", classTemp, function (err, result) {
-                                });
+                                        var userClass = {
+                                            email: req.body.email,
+                                            idclass: classId,
+                                            issendmail: false
+                                        };
 
-                                var userClass = {
-                                    email: req.body.email,
-                                    idclass: classId,
-                                    issendmail: false
-                                };
-
-                                // user-class
-                                connection.query("INSERT INTO user_class SET ?", userClass, function (err, result) {
-                                });
+                                        // user-class
+                                        connection.query("INSERT INTO user_class SET ?", userClass, function (err, result) {
+                                        });
+                                    }
+                                }
                             }
                         }
-                    }
+                    });
                 }
             });
         });
+    });
+}
+
+//// send mail
+
+function sendEmailActive(name, from, to, linkActive, callback) {
+
+    var helper = require('sendgrid').mail;
+    from_email = new helper.Email(from);
+    to_email = new helper.Email(to);
+    subject = "Xác nhận tài khoản";
+
+    var content_html = "Xin chào " + name + "<br>" + "<br>" +
+        "Chỉ còn 1 bước nữa là xong. Hãy click vào link dưới đây để hoàn tất." + "<br>" +
+        "Link: " +
+        "<a" + "href=" + linkActive + ">" + linkActive + "</a>" + "<br>" +
+        "<strong>" + "Nếu không phải bạn hãy bỏ qua email này. " + "</strong>" +
+        "Thân chào và quyết thắng!" + "<br>" +
+        "Fries Team.";
+
+    content = new helper.Content("text/html", content_html);
+    mail = new helper.Mail(from_email, subject, to_email, content);
+
+    var sg = require('sendgrid').SendGrid("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");
+    var requestBody = mail.toJSON();
+    var request = sg.emptyRequest();
+    request.method = 'POST';
+    request.path = '/v3/mail/send';
+    request.body = requestBody;
+    sg.API(request, function (response) {
+        // console.log(response.statusCode);
+        // console.log(response.body);
+        // console.log(response.headers);
+        var err = true;
+        if (response.statusCode == 202) {
+            err = false;
+            callback(err);
+        } else {
+            err = true;
+            callback(err);
+        }
     });
 }
 
