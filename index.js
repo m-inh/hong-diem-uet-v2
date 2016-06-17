@@ -16,7 +16,7 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/public');
 });
 
-var url_host = "too.com:2345";
+var url_host = "188.166.233.156:2345";
 
 var url_get_infor = "http://203.113.130.218:50223/congdaotao/module/dsthi_new/index.php";
 
