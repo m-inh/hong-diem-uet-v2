@@ -144,6 +144,30 @@ app.get('/api/getInfor', function (req, res) {
 
 });
 
+app.post('/api/reactive', function (req, res) {
+    var email = req.body.email;
+
+    connection.query("SELECT * FROM user u WHERE u.email = ?", [email], function (err, results) {
+        if (err) {
+            res.end("Something went wrong!");
+        }
+
+        console.log(results);
+        if (results.length == 0) {
+            res.end("Email chua dang ki");
+        } else {
+            var link = url_host + "/active/" + results[0].token;
+            sendEmailActive(results[0].name, "fries.uet@gmail.com", results[0].email, link, function (err) {
+                if (err) {
+                    res.end("Something went wrong!");
+                } else {
+                    res.end("Thanh cong roi day, check lai di :d");
+                }
+            });
+        }
+    });
+});
+
 function postWithMssv(mssv, req, res) {
     form.form.keysearch = mssv;
 
