@@ -122,7 +122,7 @@ app.get('/getInfor/:mssv', function (req, res) {
 
             student.timetable = timetableArr;
 
-            res.status(200).end(JSON.stringify(student));
+            res.json(student);
         });
 
     });
