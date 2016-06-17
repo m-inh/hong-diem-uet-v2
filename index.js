@@ -7,10 +7,13 @@ var request = require('request');
 var cheerio = require('cheerio');
 var crypto = require('crypto');
 var mysql = require('mysql');
+var StringDecoder = require('string_decoder').StringDecoder;
 
 var app = express();
 app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
+
+var decoder = new StringDecoder('utf8');
 
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/public');
@@ -58,6 +61,74 @@ app.get('/active/:token', function (req, res) {
     });
 });
 
+app.get('/getInfor/:mssv', function (req, res) {
+    var mssv = req.params.mssv;
+
+    // var timetable = {
+    //     code : '',
+    //     name : ''
+    // };
+
+    var timetableArr = [];
+
+    var student = {
+        msv: mssv,
+        name: '',
+        qh: "lop",
+        timetable: ''
+    };
+
+    form.form.keysearch = mssv;
+    request.post(form, function (err, response, body) {
+        if (err || response.statusCode != 200) {
+            res.status(404).end("Something went wrong!");
+            return;
+        }
+
+        // parser lop mon hoc
+        var $ = cheerio.load(body, {
+            decodeEntities: true
+        });
+        var trArr = $('tbody > tr');
+
+        if (trArr.length <= 1) {
+            res.status(404).end("Something went wrong!");
+            return;
+        }
+
+        getNameLop(body, function (err, name, lop) {
+            student.name = decoder.write(name);
+            student.qh = lop;
+            for (var i = 0; i < trArr.length; i++) {
+                var trTemp = $(trArr[i]);
+                var tdArr = trTemp.children('td');
+
+                var chooseIdTd = $(tdArr[6]);
+                var chooseNameTd = $(tdArr[7]);
+
+                if (chooseIdTd.text().length != 0) {
+                    var classId = chooseIdTd.text().toString().trim();
+                    var className = chooseNameTd.text().toString().trim();
+                    classId = classId.replace(" ", "");
+
+                    var tempTimetable = {
+                        code: classId,
+                        name: className
+                    };
+
+                    timetableArr.push(tempTimetable);
+                }
+            }
+
+            student.timetable = timetableArr;
+
+            res.status(200).end(JSON.stringify(student));
+        });
+
+    });
+
+});
+
 function postWithMssv(mssv, req, res) {
     form.form.keysearch = mssv;
 
@@ -65,6 +136,7 @@ function postWithMssv(mssv, req, res) {
     request.post(form, function (err, response, body) {
 
         if (err || response.statusCode != 200) {
+            res.end("Something went wrong!");
             return;
         }
 
@@ -206,17 +278,33 @@ var connection = mysql.createConnection({
     database: 'score_uet'
 });
 
-connection.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected to mysql!");
+// connection.connect(function (err) {
+//     if (err) throw err;
+//     console.log("Connected to mysql!");
+//
+//     app.listen(2345, function () {
+//         console.log("listening on 2345");
+//     });
+// });
 
-    app.listen(2345, function () {
-        console.log("listening on 2345");
+// get name
+
+function getNameLop(body, callback) {
+    var $ = cheerio.load(body, {
+        decodeEntities: true
     });
-});
 
-
-// test
+    var trArr = $('tbody > tr');
+    var trTemp = $(trArr);
+    var tdArr = trTemp.children('td');
+    var chooseTd = $(tdArr[2]);
+    var chooseLopTd = $(tdArr[4]);
+    if (chooseTd.text().length != 0) {
+        var name = chooseTd.text().toString().trim();
+        var lop = chooseLopTd.text().toString().trim();
+        callback(false, name, lop);
+    }
+}
 
 function getName(body, callback) {
     var $ = cheerio.load(body, {
@@ -232,3 +320,9 @@ function getName(body, callback) {
         callback(false, name);
     }
 }
+
+// test//
+
+app.listen(2345, function () {
+    console.log("listening on 2345");
+});
