@@ -34,7 +34,7 @@ var form = {
     form: param
 };
 
-app.post('/register', function (req, res) {
+app.post('/api/register', function (req, res) {
     var mssv = req.body.mssv;
     var email = req.body.email;
     form.form.keysearch = mssv;
