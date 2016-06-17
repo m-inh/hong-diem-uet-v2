@@ -9,6 +9,7 @@ var crypto = require('crypto');
 var mysql = require('mysql');
 var StringDecoder = require('string_decoder').StringDecoder;
 var url = require('url');
+var _ = require('lodash');
 
 var app = express();
 app.use(bodyParser());
@@ -67,15 +68,15 @@ app.get('/getInfor', function (req, res) {
     var queries = url_parts.query;
 
     var mssv = queries.msv;
-    if (!mssv.length) {
+    if (_.isUndefined(mssv)) {
         res.status(404).end();
         return;
     }
 
-    // var timetable = {
-    //     code : '',
-    //     name : ''
-    // };
+    if (mssv.length !== 8) {
+        res.status(404).end();
+        return;
+    }
 
     var timetableArr = [];
 
