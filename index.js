@@ -48,7 +48,7 @@ app.post('/api/register', function (req, res) {
     postWithMssv(mssv, req, res);
 });
 
-app.get('/active/:token', function (req, res) {
+app.get('/api/active/:token', function (req, res) {
     var token = req.params.token;
     console.log(token);
     connection.query("SELECT * FROM user WHERE token = ?", [token], function (err, result) {
