@@ -16,7 +16,7 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/public');
 });
 
-var url_host = "188.166.233.156:2345";
+var url_host = "too.com:2345";
 
 var url_get_infor = "http://203.113.130.218:50223/congdaotao/module/dsthi_new/index.php";
 
@@ -80,71 +80,76 @@ function postWithMssv(mssv, req, res) {
             return;
         }
 
-        crypto.randomBytes(48, function (err, buffer) {
-            var token = buffer.toString('hex');
-            console.log(token);
+        getName(body, function (err, name) {
+            if (!err) {
+                crypto.randomBytes(48, function (err, buffer) {
+                    var token = buffer.toString('hex');
+                    console.log(token);
 
-            var userSql = {
-                id: '',
-                email: req.body.email,
-                mssv: req.body.mssv,
-                isactive: false,
-                token: token
-            };
+                    var userSql = {
+                        id: '',
+                        name: name,
+                        email: req.body.email,
+                        mssv: req.body.mssv,
+                        isactive: false,
+                        token: token
+                    };
 
-            connection.query("INSERT INTO user SET ?", userSql, function (err, result) {
-                if (err) {
-                    // console.log("Khong ton tai mssv");
-                    res.end("Email nay da co nguoi dang ki");
-                } else {
-                    // response
-                    var linkActive = url_host + "/active/" + token;
-                    console.log('link: ' + linkActive);
-
-                    sendEmailActive(" bạn", "fries.uet@gmail.com", req.body.email, linkActive, function (err) {
+                    connection.query("INSERT INTO user SET ?", userSql, function (err, result) {
                         if (err) {
-                            res.end("Something went wrong!");
+                            // console.log("Khong ton tai mssv");
+                            res.end("Email nay da co nguoi dang ki");
                         } else {
-                            res.end("Check mail de hoan thanh nv!");
+                            // response
+                            var linkActive = url_host + "/active/" + token;
+                            console.log('link: ' + linkActive);
 
-                            for (var i = 0; i < trArr.length; i++) {
-                                var trTemp = $(trArr[i]);
-                                var tdArr = trTemp.children('td');
+                            sendEmailActive(name, "fries.uet@gmail.com", req.body.email, linkActive, function (err) {
+                                if (err) {
+                                    res.end("Something went wrong!");
+                                } else {
+                                    res.end("Check mail de hoan thanh nv!");
 
-                                var chooseTd = $(tdArr[6]);
+                                    for (var i = 0; i < trArr.length; i++) {
+                                        var trTemp = $(trArr[i]);
+                                        var tdArr = trTemp.children('td');
 
-                                if (chooseTd.text().length != 0) {
-                                    var classId = chooseTd.text().toString().trim();
-                                    classId = classId.replace(" ", "");
-                                    classId = classId.toLowerCase();
-                                    if (classId.length > 0) {
-                                        // console.log(classId);
-                                        var classTemp = {
-                                            id: "",
-                                            idclass: classId,
-                                            name: '',
-                                            ishasscore: false
-                                        };
+                                        var chooseTd = $(tdArr[6]);
 
-                                        connection.query("INSERT INTO class SET ?", classTemp, function (err, result) {
-                                        });
+                                        if (chooseTd.text().length != 0) {
+                                            var classId = chooseTd.text().toString().trim();
+                                            classId = classId.replace(" ", "");
+                                            classId = classId.toLowerCase();
+                                            if (classId.length > 0) {
+                                                // console.log(classId);
+                                                var classTemp = {
+                                                    id: "",
+                                                    idclass: classId,
+                                                    name: '',
+                                                    ishasscore: false
+                                                };
 
-                                        var userClass = {
-                                            email: req.body.email,
-                                            idclass: classId,
-                                            issendmail: false
-                                        };
+                                                connection.query("INSERT INTO class SET ?", classTemp, function (err, result) {
+                                                });
 
-                                        // user-class
-                                        connection.query("INSERT INTO user_class SET ?", userClass, function (err, result) {
-                                        });
+                                                var userClass = {
+                                                    email: req.body.email,
+                                                    idclass: classId,
+                                                    issendmail: false
+                                                };
+
+                                                // user-class
+                                                connection.query("INSERT INTO user_class SET ?", userClass, function (err, result) {
+                                                });
+                                            }
+                                        }
                                     }
                                 }
-                            }
+                            });
                         }
                     });
-                }
-            });
+                });
+            }
         });
     });
 }
@@ -192,11 +197,12 @@ function sendEmailActive(name, from, to, linkActive, callback) {
 
 
 /////// connection
+var temp_pass = "cBHdYiWf";
 
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'cBHdYiWf',
+    password: '',
     database: 'score_uet'
 });
 
@@ -208,3 +214,21 @@ connection.connect(function (err) {
         console.log("listening on 2345");
     });
 });
+
+
+// test
+
+function getName(body, callback) {
+    var $ = cheerio.load(body, {
+        decodeEntities: true
+    });
+
+    var trArr = $('tbody > tr');
+    var trTemp = $(trArr);
+    var tdArr = trTemp.children('td');
+    var chooseTd = $(tdArr[2]);
+    if (chooseTd.text().length != 0) {
+        var name = chooseTd.text().toString().trim();
+        callback(false, name);
+    }
+}
