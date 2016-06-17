@@ -271,7 +271,6 @@ function sendEmailActive(name, from, to, linkActive, callback) {
     request.method = 'POST';
     request.path = '/v3/mail/send';
     request.body = requestBody;
-    request.body.form.name = 'Fries Team';
     sg.API(request, function (response) {
         // console.log(response.statusCode);
         // console.log(response.body);
