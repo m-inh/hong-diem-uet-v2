@@ -34,8 +34,8 @@ var form = {
     form: param
 };
 
-app.post('/register', function (req, res) {
-    var mssv = req.body.mssv;
+app.post('/api/register', function (req, res) {
+    var mssv = req.body.msv;
     var email = req.body.email;
     form.form.keysearch = mssv;
 
@@ -156,8 +156,8 @@ function postWithMssv(mssv, req, res) {
         var trArr = $('tbody > tr');
 
         if (trArr.length <= 1) {
-            console.log("Khong ton tai mssv");
-            res.end("Khong ton tai mssv");
+            // console.log("Khong ton tai mssv");
+            res.status(404).end("Khong ton tai mssv");
             return;
         }
 
@@ -196,17 +196,20 @@ function postWithMssv(mssv, req, res) {
                                         var tdArr = trTemp.children('td');
 
                                         var chooseTd = $(tdArr[6]);
+                                        var chooseNameTd = $(tdArr[7]);
 
                                         if (chooseTd.text().length != 0) {
                                             var classId = chooseTd.text().toString().trim();
                                             classId = classId.replace(" ", "");
                                             classId = classId.toLowerCase();
+
+                                            var className = chooseNameTd.text().toString().trim();
                                             if (classId.length > 0) {
                                                 // console.log(classId);
                                                 var classTemp = {
                                                     id: "",
                                                     idclass: classId,
-                                                    name: '',
+                                                    name: className,
                                                     ishasscore: false
                                                 };
 
@@ -287,14 +290,14 @@ var connection = mysql.createConnection({
     database: 'score_uet'
 });
 
-// connection.connect(function (err) {
-//     if (err) throw err;
-//     console.log("Connected to mysql!");
-//
-//     app.listen(2345, function () {
-//         console.log("listening on 2345");
-//     });
-// });
+connection.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected to mysql!");
+
+    app.listen(2345, function () {
+        console.log("listening on 2345");
+    });
+});
 
 // get name
 
@@ -332,6 +335,6 @@ function getName(body, callback) {
 
 // test//
 
-app.listen(2345, function () {
-    console.log("listening on 2345");
-});
+// app.listen(2345, function () {
+//     console.log("listening on 2345");
+// });
