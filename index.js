@@ -35,6 +35,12 @@ var form = {
 };
 
 app.post('/api/register', function (req, res) {
+    var re_capcha = req.body['g-recaptcha-response'];
+    if (_.isEmpty(re_capcha)) {
+        res.send('Re-capcha is not valid!');
+        return;
+    }
+
     var mssv = req.body.msv;
     var email = req.body.email;
     form.form.keysearch = mssv;
