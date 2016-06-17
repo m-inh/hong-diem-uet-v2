@@ -174,6 +174,31 @@ app.post('/api/reactive', function (req, res) {
     });
 });
 
+app.get('/api/results', function (req, res) {
+
+    var subjectArr = [];
+    connection.query('SELECT * FROM class WHERE ishasscore = true', function (err, results) {
+        if (err) {
+            res.end("Some thing went wrong!");
+        } else {
+            for (var i = 0; i < results.length; i++) {
+                var idClass = results[i].idclass;
+                var nameClass = results[i].name;
+                var link = results[i].link;
+
+                var subject = {
+                    id: idClass,
+                    name: nameClass,
+                    link: link
+                };
+                subjectArr.push(subject);
+            }
+
+            res.json(subjectArr);
+        }
+    });
+});
+
 function postWithMssv(mssv, req, res) {
     form.form.keysearch = mssv;
 
