@@ -287,7 +287,7 @@ var temp_pass = "cBHdYiWf";
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'cBHdYiWf',
     database: 'score_uet'
 });
 
