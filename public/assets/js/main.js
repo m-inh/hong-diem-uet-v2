@@ -11,6 +11,14 @@ jQuery(document).ready(function ($) {
         loadTimetable();
     }
 
+    $('.btn_register').on('submit', function (e) {
+        e.preventDefault();
+
+        var msv = $('#msv').val();
+        var email = $('#email').val();
+        register(msv, email);
+    });
+
     function loadTimetable() {
         var msv = $('#msv').val();
         var url = url_ajax + '/getInfor?msv=' + msv;
@@ -36,6 +44,22 @@ jQuery(document).ready(function ($) {
 
                 $('#name').val(nameSV);
                 $('#timetable tbody').html(htmlTable);
+            }
+        });
+    }
+
+    function register(msv, email) {
+        var url_ajax_register = url_ajax + '/register';
+        $.ajax({
+            method: 'POST',
+            url: url_ajax_register,
+            data: {
+                email: email,
+                msv: msv
+            },
+            dataType: 'json',
+            success: function (res) {
+                alert('Success!');
             }
         });
     }
