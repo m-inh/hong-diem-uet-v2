@@ -13,7 +13,7 @@ jQuery(document).ready(function ($) {
 
     function loadTimetable() {
         var msv = $('#msv').val();
-        var url = url_ajax + '?msv=' + msv;
+        var url = url_ajax + '/getInfor?msv=' + msv;
 
         $.ajax({
             url: url,
