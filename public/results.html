@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
+    <title>Kết quả điểm thi của các lớp môn học</title>
+    <link rel="stylesheet" href="assets/css/style.css?v=1.2.0"/>
+</head>
+<body>
+<div class="container">
+    <div class="exam_results">
+        <div class="back"><a href="/">Quay lại trang đăng ký</a></div>
+        <h3>Danh sách các lớp có kết quả thi</h3>
+        <table class="table table-responsive table_results">
+            <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã LMH</th>
+                <th class="hidden-xs hidden-sm">Tên MH</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<script src="assets/js/jquery.min.js?v=1.11.3"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        function show_results() {
+            var $results = $('.table_results');
+            var url_ajax_results = url_ajax + '/results';
+            $.ajax({
+                method: 'GET',
+                url: url_ajax_results,
+                dataType: 'json',
+                success: function (res) {
+                    var html = '';
+                    for (var i = 0; i < res.length; i++) {
+                        var stt = i + 1;
+                        var subject = res[i];
+                        html += '<tr>' +
+                                '<td>' + stt + '</td>' +
+                                '<td><a href="' + subject.link + '" target="_blank">' + subject.id + '</a></td>' +
+                                '<td>' + subject.name + '</td>' +
+                                '</tr>';
+                    }
+
+                    $results.find('tbody').html(html);
+                }
+            });
+        }
+
+        show_results();
+    });
+</script>
+</body>
+</html>
