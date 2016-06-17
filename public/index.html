@@ -14,7 +14,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6"><h2>Đăng ký</h2>
-            <form action="/register" data-toggle="validator" method="POST">
+            <form action="/api/register" data-toggle="validator" method="POST">
                 <div class="row">
 
                     <div class="col-md-6">
@@ -23,7 +23,7 @@
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-education"></span>
                                 </span>
-                                <input type="number" name="msv" id="msv" class="form-control" data-remote="/getInfor" data-error="Mã số sinh viên không đúng! Hoặc đã có vấn đề gì đó đã xảy ra." data-minlength="8" maxlength="8" value="">
+                                <input type="number" name="msv" id="msv" class="form-control" data-remote="/api/getInfor" data-error="Mã số sinh viên không đúng! Hoặc đã có vấn đề gì đó đã xảy ra." data-minlength="8" maxlength="8" value="">
                             </div>
                             <div class="help-block with-errors"></div>
                         </div>
