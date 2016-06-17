@@ -179,6 +179,7 @@ function postWithMssv(mssv, req, res) {
                     connection.query("INSERT INTO user SET ?", userSql, function (err, result) {
                         if (err) {
                             // console.log("Khong ton tai mssv");
+                            console.log(err);
                             res.end("Email nay da co nguoi dang ki");
                         } else {
                             // response
