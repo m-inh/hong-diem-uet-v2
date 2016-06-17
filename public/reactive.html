@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
+    <title>Gửi lại email xác nhận đăng ký</title>
+    <link rel="stylesheet" href="assets/css/style.css?v=1.2.0"/>
+</head>
+<body>
+<div class="subscriber" style="padding-top: 50px;"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <form action="api/reactive" data-toggle="validator" method="POST">
+                <div class="form-group"><label for="email">Email:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </span>
+                        <input type="email" name="email" class="form-control" id="email" data-error="Email chưa hợp lệ." required value="">
+                    </div>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="g-recaptcha" data-sitekey="6Ld4MRsTAAAAAOdwBj2DAAXk2e3oem3zkAFWJBUs"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success btn-block" type="submit">Gửi lại</button>
+                    <div style="padding-top: 20px"><a href="/">Quay lại</a></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12"></div>
+    </div>
+</div>
+
+<script src="//www.google.com/recaptcha/api.js?v=1.0.0"></script>
+</body>
+</html>

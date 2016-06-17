@@ -145,6 +145,12 @@ app.get('/api/getInfor', function (req, res) {
 });
 
 app.post('/api/reactive', function (req, res) {
+    var re_capcha = req.body['g-recaptcha-response'];
+    if (_.isEmpty(re_capcha)) {
+        res.send('Re-capcha is not valid!');
+        return;
+    }
+
     var email = req.body.email;
 
     connection.query("SELECT * FROM user u WHERE u.email = ?", [email], function (err, results) {
