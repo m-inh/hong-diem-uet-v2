@@ -8,6 +8,7 @@ var cheerio = require('cheerio');
 var crypto = require('crypto');
 var mysql = require('mysql');
 var StringDecoder = require('string_decoder').StringDecoder;
+var url = require('url');
 
 var app = express();
 app.use(bodyParser());
@@ -61,8 +62,15 @@ app.get('/active/:token', function (req, res) {
     });
 });
 
-app.get('/getInfor/:mssv', function (req, res) {
-    var mssv = req.params.mssv;
+app.get('/getInfor', function (req, res) {
+    var url_parts = url.parse(req.url, true);
+    var queries = url_parts.query;
+
+    var mssv = queries.msv;
+    if (!mssv.length) {
+        res.status(404).end();
+        return;
+    }
 
     // var timetable = {
     //     code : '',
