@@ -171,7 +171,7 @@ function postWithMssv(mssv, req, res) {
                         id: '',
                         name: name,
                         email: req.body.email,
-                        mssv: req.body.mssv,
+                        mssv: mssv,
                         isactive: false,
                         token: token
                     };
@@ -286,7 +286,7 @@ var temp_pass = "cBHdYiWf";
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'cBHdYiWf',
+    password: '',
     database: 'score_uet'
 });
 
