@@ -248,7 +248,6 @@ function postWithMssv(mssv, req, res) {
                             //Thanh cong
                             var responseNewUser = bot.newUser(userSql.mssv, userSql.email);
                             responseNewUser.end(function (res) {
-                                "use strict";
                                 console.log(res);
                             });
 
