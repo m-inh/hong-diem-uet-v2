@@ -10,6 +10,8 @@ var mysql = require('mysql');
 var StringDecoder = require('string_decoder').StringDecoder;
 var url = require('url');
 var _ = require('lodash');
+var BotK = require('./connect-bot');
+var bot = new BotK();
 
 var app = express();
 app.use(bodyParser());
@@ -243,6 +245,9 @@ function postWithMssv(mssv, req, res) {
                             console.log(err);
                             res.end("Email nay da co nguoi dang ki");
                         } else {
+                            //Thanh cong
+                            bot.newUser(userSql.mssv, userSql.email);
+
                             // response
                             var linkActive = url_host + "/active/" + token;
                             console.log('link: ' + linkActive);
