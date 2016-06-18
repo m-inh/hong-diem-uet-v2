@@ -233,8 +233,8 @@ function postWithMssv(mssv, req, res) {
                     var userSql = {
                         id: '',
                         name: name,
-                        email: req.body.email,
-                        mssv: mssv,
+                        email: mysql.escape(req.body.email),
+                        mssv: mysql.escape(mssv),
                         isactive: false,
                         token: token
                     };
