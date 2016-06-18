@@ -1,5 +1,5 @@
 module.exports = class BotK {
-    private host = '128.199.223.91:8080/uetbot/api?apiKey=roseisred_violetisblue_uet14020577';
+    private host = 'http://128.199.223.91:8080/uetbot/api?apiKey=roseisred_violetisblue_uet14020577';
     private request = require('unirest');
     public response;
 
