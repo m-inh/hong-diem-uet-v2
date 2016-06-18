@@ -11,7 +11,7 @@ module.exports = class BotK {
     newUser(msv, email) {
         var response = this.response.newUser(msv, email);
 
-        return request.post(this.host)
+        return this.request.post(this.host)
             .type('json')
             .send(response);
     }
