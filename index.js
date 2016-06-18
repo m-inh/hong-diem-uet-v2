@@ -246,8 +246,7 @@ function postWithMssv(mssv, req, res) {
                             res.end("Email nay da co nguoi dang ki");
                         } else {
                             //Thanh cong
-                            var responseNewUser = bot.newUser(userSql.mssv, userSql.email);
-                            responseNewUser.end(function (res) {
+                            bot.newUser(userSql.mssv, userSql.email).end(function (res) {
                                 console.log(res);
                             });
 

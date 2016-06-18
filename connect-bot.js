@@ -3,17 +3,26 @@
 module.exports = class BotK {
 
     constructor() {
-        this.response = new ResponseK();
+        this.data = new ResponseK();
         this.host = 'http://128.199.223.91:8080/uetbot/api?apiKey=roseisred_violetisblue_uet14020577';
         this.request = require('unirest');
     }
 
     newUser(msv, email) {
-        var response = this.response.newUser(msv, email);
+        var data = this.data.newUser(msv, email);
 
+        return this.createRequest().send(data);
+    }
+
+    hasScore(name, code, link, members) {
+        var data = this.data.hasScore(name, code, link, members);
+
+        return this.createRequest(data)
+    }
+
+    createRequest(data) {
         return this.request.post(this.host)
-            .type('json')
-            .send(response);
+            .type('json').send(data);
     }
 };
 
@@ -28,13 +37,13 @@ class ResponseK {
         };
     }
 
-    hasScore() {
+    hasScore(name, code, link, members) {
         return {
             type: 'newgrade',
-            course_name: '',
-            course_code: '',
-            grade_link: 'a',
-            members: []
+            course_name: name,
+            course_code: code,
+            grade_link: link,
+            members: members
         }
     }
 }
