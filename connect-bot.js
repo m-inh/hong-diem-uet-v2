@@ -1,13 +1,14 @@
-module.exports = class BotK {
-    private host = 'http://128.199.223.91:8080/uetbot/api?apiKey=roseisred_violetisblue_uet14020577';
-    private request = require('unirest');
-    public response;
+'use strict';
 
-    public Bot() {
+module.exports = class BotK {
+
+    constructor() {
         this.response = new ResponseK();
+        this.host = 'http://128.199.223.91:8080/uetbot/api?apiKey=roseisred_violetisblue_uet14020577';
+        this.request = require('unirest');
     }
 
-    public newUser(msv, email) {
+    newUser(msv, email) {
         var response = this.response.newUser(msv, email);
 
         return request.post(this.host)
@@ -17,17 +18,17 @@ module.exports = class BotK {
 };
 
 class ResponseK {
-    var md5 = require('md5');
+    newUser(msv, email) {
+        var md5 = require('md5');
 
-    public static newUser(msv, email) {
-        return response = {
+        return {
             type: 'newuser',
             mssv: msv,
             token: md5(email)
         };
     }
 
-    public static hasScore() {
+    hasScore() {
         return {
             type: 'newgrade',
             course_name: '',
