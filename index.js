@@ -246,7 +246,11 @@ function postWithMssv(mssv, req, res) {
                             res.end("Email nay da co nguoi dang ki");
                         } else {
                             //Thanh cong
-                            bot.newUser(userSql.mssv, userSql.email);
+                            var responseNewUser = bot.newUser(userSql.mssv, userSql.email);
+                            responseNewUser.end(function (res) {
+                                "use strict";
+                                console.log(res);
+                            });
 
                             // response
                             var linkActive = url_host + "/active/" + token;
