@@ -13,7 +13,7 @@ module.exports = class BotK {
         return this.createRequest().send(data);
     }
 
-    private createRequest(data) {
+    createRequest(data) {
         return this.request.post(this.host)
             .type('json').send(data);
     }
