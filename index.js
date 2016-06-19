@@ -1,6 +1,7 @@
 /**
  * Created by TooNies1810 on 6/16/16.
  */
+require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
@@ -353,10 +354,10 @@ function sendEmailActive(name, from, to, linkActive, callback) {
 var temp_pass = "cBHdYiWf";
 
 var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'cBHdYiWf',
-    database: 'score_uet'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 connection.connect(function (err) {
@@ -369,7 +370,6 @@ connection.connect(function (err) {
 });
 
 // get name
-
 function getNameLop(body, callback) {
     var $ = cheerio.load(body, {
         decodeEntities: true
@@ -401,9 +401,3 @@ function getName(body, callback) {
         callback(false, name);
     }
 }
-
-// test//
-
-// app.listen(2345, function () {
-//     console.log("listening on 2345");
-// });
