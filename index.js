@@ -381,7 +381,6 @@ function sendEmailActive(name, from, to, linkActive, callback) {
 
 
 /////// connection
-var temp_pass = "cBHdYiWf";
 
 var connection = mysql.createConnection({
     host: process.env.DB_HOST,
