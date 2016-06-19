@@ -50,16 +50,18 @@ jQuery(document).ready(function ($) {
 
     function register(msv, email) {
         var url_ajax_register = url_ajax + '/register';
+        var recaptcha = $('.g-recaptcha-response').val();
         $.ajax({
             method: 'POST',
             url: url_ajax_register,
             data: {
                 email: email,
-                msv: msv
+                msv: msv,
+                'g-recaptcha-response': recaptcha
             },
             dataType: 'json',
             success: function (res) {
-                alert('Success!');
+                notify(res.err, res.msg)
             }
         });
     }
@@ -72,6 +74,28 @@ jQuery(document).ready(function ($) {
                 $('#countClass').text(data.class);
                 $('#countUser').text(data.user);
             }
+        });
+    }
+
+    function notify(err, msg) {
+        if (err) {
+            generate('error', msg);
+        } else {
+            generate('success', msg);
+        }
+    }
+
+    function generate(type, msg) {
+        var n = noty({
+            text: msg,
+            type: type,
+            dismissQueue: true,
+            layout: 'topLeft',
+            theme: 'relax',
+            closeWith: ['button', 'click'],
+            maxVisible: 1,
+            modal: false,
+            killer: true
         });
     }
 
