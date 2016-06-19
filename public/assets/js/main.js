@@ -94,7 +94,8 @@ jQuery(document).ready(function ($) {
             theme: 'relax',
             closeWith: ['button', 'click'],
             maxVisible: 1,
-            modal: false
+            modal: false,
+            killer: true
         });
     }
 
