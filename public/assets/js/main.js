@@ -89,7 +89,7 @@ jQuery(document).ready(function ($) {
             type: type,
             dismissQueue: true,
             layout: 'topLeft',
-            theme: theme,
+            theme: 'relax',
             closeWith: ['button', 'click'],
             maxVisible: 20,
             modal: false
