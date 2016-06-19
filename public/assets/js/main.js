@@ -82,6 +82,8 @@ jQuery(document).ready(function ($) {
             generate('error', msg);
         } else {
             generate('success', msg);
+            $('#msv').val('');
+            $('#email').val('');
         }
     }
 
