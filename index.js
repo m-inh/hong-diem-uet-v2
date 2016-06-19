@@ -269,7 +269,7 @@ function postWithMssv(mssv, email, req, res) {
                         } else {
                             //Thanh cong
                             bot.newUser(userSql.mssv, userSql.email).end(function (res) {
-                                console.log(res);
+                                console.log(res.body);
                             });
 
                             // response
