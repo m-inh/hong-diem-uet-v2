@@ -11,7 +11,7 @@ jQuery(document).ready(function ($) {
         loadTimetable();
     }
 
-    $('.btn_register').on('submit', function (e) {
+    $('.form_submit').on('submit', function (e) {
         e.preventDefault();
 
         var msv = $('#msv').val();
