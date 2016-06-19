@@ -255,6 +255,7 @@ app.get('/api/count', function (req, res) {
         if (!err) {
             var countuser = results[0].countuser;
             connection.query("SELECT COUNT(*) AS countclass FROM class", function (err, results) {
+                console.log(results);
                 var countclass = results[0].countclass;
                 var count = {
                     user: countuser,
