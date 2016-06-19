@@ -50,12 +50,14 @@ jQuery(document).ready(function ($) {
 
     function register(msv, email) {
         var url_ajax_register = url_ajax + '/register';
+        var recaptcha = $('.g-recaptcha-response').val();
         $.ajax({
             method: 'POST',
             url: url_ajax_register,
             data: {
                 email: email,
-                msv: msv
+                msv: msv,
+                'g-recaptcha-response': recaptcha
             },
             dataType: 'json',
             success: function (res) {
