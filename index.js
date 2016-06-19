@@ -11,6 +11,7 @@ var mysql = require('mysql');
 var StringDecoder = require('string_decoder').StringDecoder;
 var url = require('url');
 var _ = require('lodash');
+var validator = require('validator');
 var checkParam = require('./check-param');
 var BotK = require('./connect-bot');
 var bot = new BotK();
@@ -47,8 +48,15 @@ app.post('/api/register', function (req, res) {
 
     var mssv = req.body.msv;
     var email = req.body.email;
+
+    if (!validator.isEmail(email)) {
+        res.status(404).end('Email is invalid!');
+        return;
+    }
+    
     if (!checkParam.checkParamValidate(mssv) || !checkParam.checkParamValidate(email)) {
         res.status(404).end("Something went wrong!");
+        return;
     }
 
     mssv = checkParam.validateParam(mssv);
