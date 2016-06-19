@@ -251,6 +251,7 @@ app.get('/api/results', function (req, res) {
 });
 
 app.get('/api/count', function (req, res) {
+    console.log("ok count");
     connection.query("SELECT COUNT(*) AS countuser FROM user WHERE 1", function (err, results) {
         if (!err) {
             var countuser = results[0].countuser;
