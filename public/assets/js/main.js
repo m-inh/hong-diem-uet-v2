@@ -93,7 +93,7 @@ jQuery(document).ready(function ($) {
             layout: 'topLeft',
             theme: 'relax',
             closeWith: ['button', 'click'],
-            maxVisible: 20,
+            maxVisible: 1,
             modal: false
         });
     }
