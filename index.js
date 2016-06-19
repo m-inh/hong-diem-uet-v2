@@ -207,25 +207,6 @@ app.post('/api/reactive', function (req, res) {
     });
 });
 
-app.get('/api/count', function (req, res) {
-    console.log("ok count");
-    connection.query("SELECT COUNT(*) AS countuser FROM user", function (err, results) {
-        if (!err) {
-            var countuser = results.countuser;
-            connection.query("SELECT COUNT(*) AS countclass FROM class", function (err, results) {
-                var countclass = results.countclass;
-                var count = {
-                    user: countuser,
-                    class: countclass
-                };
-
-                res.json(count);
-            });
-        }
-
-    });
-});
-
 app.get('/api/results', function (req, res) {
 
     var subjectArr = [];
