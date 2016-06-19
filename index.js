@@ -11,6 +11,7 @@ var mysql = require('mysql');
 var StringDecoder = require('string_decoder').StringDecoder;
 var url = require('url');
 var _ = require('lodash');
+var checkParam = require('./check-param');
 var BotK = require('./connect-bot');
 var bot = new BotK();
 
@@ -46,14 +47,28 @@ app.post('/api/register', function (req, res) {
 
     var mssv = req.body.msv;
     var email = req.body.email;
+    if (!checkParam.checkParamValidate(mssv) || !checkParam.checkParamValidate(email)) {
+        res.status(404).end("Something went wrong!");
+    }
+
+    mssv = checkParam.validateParam(mssv);
+    email = checkParam.validateParam(email);
+
     form.form.keysearch = mssv;
 
-    postWithMssv(mssv, req, res);
+    postWithMssv(mssv, email, req, res);
 });
 
 app.get('/api/active/:token', function (req, res) {
     var token = req.params.token;
     console.log(token);
+
+    if (!checkParam.checkParamValidate(token)) {
+        res.end("Something went wrong!");
+    }
+
+    token = checkParam.validateParam(token);
+
     connection.query("SELECT * FROM user WHERE token = ?", [token], function (err, result) {
         if (err) {
             res.end("Something went wrong!");
@@ -77,7 +92,7 @@ app.get('/api/getInfor', function (req, res) {
     var queries = url_parts.query;
 
     var mssv = queries.msv;
-    if (_.isUndefined(mssv)) {
+    if (_.isUndefined(mssv) || !checkParam.checkParamValidate(mssv)) {
         res.status(404).end();
         return;
     }
@@ -156,6 +171,12 @@ app.post('/api/reactive', function (req, res) {
 
     var email = req.body.email;
 
+    if (!checkParam.checkParamValidate(email)) {
+        res.status(404).end("Something went wrong!");
+    }
+
+    email = checkParam.validateParam(email);
+
     connection.query("SELECT * FROM user u WHERE u.email = ?", [email], function (err, results) {
         if (err) {
             res.end("Something went wrong!");
@@ -202,7 +223,7 @@ app.get('/api/results', function (req, res) {
     });
 });
 
-function postWithMssv(mssv, req, res) {
+function postWithMssv(mssv, email, req, res) {
     form.form.keysearch = mssv;
 
     //
@@ -234,7 +255,7 @@ function postWithMssv(mssv, req, res) {
                     var userSql = {
                         id: '',
                         name: name,
-                        email: req.body.email,
+                        email: email,
                         mssv: mssv,
                         isactive: false,
                         token: token
@@ -255,7 +276,7 @@ function postWithMssv(mssv, req, res) {
                             var linkActive = url_host + "/active/" + token;
                             console.log('link: ' + linkActive);
 
-                            sendEmailActive(name, "fries.uet@gmail.com", req.body.email, linkActive, function (err) {
+                            sendEmailActive(name, "fries.uet@gmail.com", email, linkActive, function (err) {
                                 if (err) {
                                     res.end("Something went wrong!");
                                 } else {
@@ -287,7 +308,7 @@ function postWithMssv(mssv, req, res) {
                                                 });
 
                                                 var userClass = {
-                                                    email: req.body.email,
+                                                    email: email,
                                                     idclass: classId,
                                                     issendmail: false
                                                 };
