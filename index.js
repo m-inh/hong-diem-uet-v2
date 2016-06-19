@@ -371,7 +371,6 @@ function sendEmailActive(name, from, to, linkActive, callback) {
 
 
 /////// connection
-var temp_pass = "cBHdYiWf";
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -422,9 +421,3 @@ function getName(body, callback) {
         callback(false, name);
     }
 }
-
-// test//
-
-// app.listen(2345, function () {
-//     console.log("listening on 2345");
-// });
