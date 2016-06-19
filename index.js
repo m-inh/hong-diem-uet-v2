@@ -252,10 +252,10 @@ app.get('/api/results', function (req, res) {
 
 app.get('/api/count', function (req, res) {
     console.log("ok count");
-    connection.query("SELECT COUNT(*) AS countuser FROM user WHERE 1", function (err, results) {
+    connection.query("SELECT COUNT(*) AS countuser FROM user", function (err, results) {
         if (!err) {
             var countuser = results[0].countuser;
-            connection.query("SELECT COUNT(*) AS countclass FROM class WHERE 1", function (err, results) {
+            connection.query("SELECT COUNT(*) AS countclass FROM class WHERE ishasscore = true", function (err, results) {
                 if (!err) {
                     console.log(results);
                     var countclass = results[0].countclass;
