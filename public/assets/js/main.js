@@ -74,4 +74,6 @@ jQuery(document).ready(function ($) {
             }
         });
     }
+
+    getCountClassUser();
 });
