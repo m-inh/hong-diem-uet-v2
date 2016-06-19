@@ -264,7 +264,7 @@ app.get('/api/count', function (req, res) {
                         class: countclass
                     };
 
-                    res.end(JSON.stringify(count));
+                    res.json(count);
                 } else {
                     res.status(404).end("Error");
                 }
