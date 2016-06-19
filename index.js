@@ -41,22 +41,31 @@ var form = {
 
 app.post('/api/register', function (req, res) {
     var re_capcha = req.body['g-recaptcha-response'];
-    console.log(req);
+    // console.log(req);
     if (_.isEmpty(re_capcha)) {
-        res.send('Re-capcha is not valid!');
+        res.json({
+            err: true,
+            msg: 'Re-capcha is not valid!'
+        });
         return;
     }
 
     var mssv = req.body.msv;
     var email = req.body.email;
 
-    if (!validator.isEmail(email)) {
-        res.status(404).end('Email is invalid!');
+    if (!validator.isEmail(email) || mssv.length != 8) {
+        res.status(404).json({
+            err: true,
+            msg: 'Email or Mssv is invalid!'
+        });
         return;
     }
 
     if (!checkParam.checkParamValidate(mssv) || !checkParam.checkParamValidate(email)) {
-        res.status(404).end("Something went wrong!");
+        res.status(404).json({
+            err: true,
+            msg: "Something went wrong!"
+        });
         return;
     }
 
@@ -174,33 +183,51 @@ app.get('/api/getInfor', function (req, res) {
 app.post('/api/reactive', function (req, res) {
     var re_capcha = req.body['g-recaptcha-response'];
     if (_.isEmpty(re_capcha)) {
-        res.send('Re-capcha is not valid!');
+        res.json({
+            err: true,
+            msg: 'Re-capcha is not valid!'
+        });
         return;
     }
 
     var email = req.body.email;
 
     if (!checkParam.checkParamValidate(email)) {
-        res.status(404).end("Something went wrong!");
+        res.status(404).json({
+            err: true,
+            msg: "Something went wrong!"
+        });
     }
 
     email = checkParam.validateParam(email);
 
     connection.query("SELECT * FROM user u WHERE u.email = ?", [email], function (err, results) {
         if (err) {
-            res.end("Something went wrong!");
+            res.json({
+                err: true,
+                msg: "Something went wrong!"
+            });
         }
 
-        console.log(results);
+        // console.log(results);
         if (results.length == 0) {
-            res.end("Email chua dang ki");
+            res.json({
+                err: true,
+                msg: "Email chua dang ki"
+            });
         } else {
             var link = url_host + "/active/" + results[0].token;
             sendEmailActive(results[0].name, "fries.uet@gmail.com", results[0].email, link, function (err) {
                 if (err) {
-                    res.end("Something went wrong!");
+                    res.json({
+                        err: true,
+                        msg: "Something went wrong!"
+                    });
                 } else {
-                    res.end("Thanh cong roi day, check lai di :d");
+                    res.json({
+                        err: false,
+                        msg: "Thanh cong roi day, check lai di :d"
+                    });
                 }
             });
         }
@@ -264,7 +291,10 @@ function postWithMssv(mssv, email, req, res) {
     request.post(form, function (err, response, body) {
 
         if (err || response.statusCode != 200) {
-            res.end("Something went wrong!");
+            res.json({
+                err: true,
+                msg: "Something went wrong!"
+            });
             return;
         }
 
@@ -275,8 +305,10 @@ function postWithMssv(mssv, email, req, res) {
         var trArr = $('tbody > tr');
 
         if (trArr.length <= 1) {
-            // console.log("Khong ton tai mssv");
-            res.status(404).end("Khong ton tai mssv");
+            res.status(404).json({
+                err: true,
+                msg: "Không tồn tại mã số sinh viên"
+            });
             return;
         }
 
@@ -299,7 +331,10 @@ function postWithMssv(mssv, email, req, res) {
                         if (err) {
                             // console.log("Khong ton tai mssv");
                             console.log(err);
-                            res.end("Email nay da co nguoi dang ki");
+                            res.json({
+                                err: true,
+                                msg: "Email này đã có người đăng kí"
+                            });
                         } else {
                             //Thanh cong
                             bot.newUser(userSql.mssv, userSql.email).end(function (res) {
@@ -312,9 +347,15 @@ function postWithMssv(mssv, email, req, res) {
 
                             sendEmailActive(name, "fries.uet@gmail.com", email, linkActive, function (err) {
                                 if (err) {
-                                    res.end("Something went wrong!");
+                                    res.json({
+                                        err: true,
+                                        msg: "Something went wrong!"
+                                    });
                                 } else {
-                                    res.end("Check mail de hoan thanh nv!");
+                                    res.json({
+                                        err: false,
+                                        msg: "Gửi email active thành công!"
+                                    });
 
                                     for (var i = 0; i < trArr.length; i++) {
                                         var trTemp = $(trArr[i]);
