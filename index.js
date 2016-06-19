@@ -1,6 +1,7 @@
 /**
  * Created by TooNies1810 on 6/16/16.
  */
+require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
@@ -10,6 +11,7 @@ var mysql = require('mysql');
 var StringDecoder = require('string_decoder').StringDecoder;
 var url = require('url');
 var _ = require('lodash');
+var validator = require('validator');
 var checkParam = require('./check-param');
 var BotK = require('./connect-bot');
 var bot = new BotK();
@@ -39,6 +41,7 @@ var form = {
 
 app.post('/api/register', function (req, res) {
     var re_capcha = req.body['g-recaptcha-response'];
+    console.log(req);
     if (_.isEmpty(re_capcha)) {
         res.send('Re-capcha is not valid!');
         return;
@@ -46,8 +49,15 @@ app.post('/api/register', function (req, res) {
 
     var mssv = req.body.msv;
     var email = req.body.email;
+
+    if (!validator.isEmail(email)) {
+        res.status(404).end('Email is invalid!');
+        return;
+    }
+
     if (!checkParam.checkParamValidate(mssv) || !checkParam.checkParamValidate(email)) {
         res.status(404).end("Something went wrong!");
+        return;
     }
 
     mssv = checkParam.validateParam(mssv);
@@ -268,7 +278,7 @@ function postWithMssv(mssv, email, req, res) {
                         } else {
                             //Thanh cong
                             bot.newUser(userSql.mssv, userSql.email).end(function (res) {
-                                console.log(res);
+                                console.log(res.body);
                             });
 
                             // response
@@ -348,7 +358,7 @@ function sendEmailActive(name, from, to, linkActive, callback) {
     content = new helper.Content("text/html", content_html);
     mail = new helper.Mail(from_email, subject, to_email, content);
 
-    var sg = require('sendgrid').SendGrid("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");
+    var sg = require('sendgrid').SendGrid(process.env.SG_KEY);
     var requestBody = mail.toJSON();
     var request = sg.emptyRequest();
     request.method = 'POST';
@@ -373,10 +383,10 @@ function sendEmailActive(name, from, to, linkActive, callback) {
 /////// connection
 
 var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'cBHdYiWf',
-    database: 'score_uet'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 connection.connect(function (err) {
@@ -389,7 +399,6 @@ connection.connect(function (err) {
 });
 
 // get name
-
 function getNameLop(body, callback) {
     var $ = cheerio.load(body, {
         decodeEntities: true
