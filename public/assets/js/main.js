@@ -63,4 +63,15 @@ jQuery(document).ready(function ($) {
             }
         });
     }
+
+    function getCountClassUser() {
+        $.ajax({
+            url: "/api/count",
+            method: 'GET',
+            success: function (data) {
+                $('#countClass').val(data.class);
+                $('#countUser').val(data.user);
+            }
+        });
+    }
 });
