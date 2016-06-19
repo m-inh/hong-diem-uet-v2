@@ -213,7 +213,7 @@ app.post('/api/reactive', function (req, res) {
         if (results.length == 0) {
             res.json({
                 err: true,
-                msg: "Email chua dang ki"
+                msg: "Email chưa đăng kí"
             });
         } else {
             var link = url_host + "/active/" + results[0].token;
@@ -226,7 +226,7 @@ app.post('/api/reactive', function (req, res) {
                 } else {
                     res.json({
                         err: false,
-                        msg: "Thanh cong roi day, check lai di :d"
+                        msg: "Thành công rồi đấy, check lại mail đi :D"
                     });
                 }
             });
