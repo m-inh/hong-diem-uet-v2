@@ -69,8 +69,8 @@ jQuery(document).ready(function ($) {
             url: url_ajax + "/count",
             method: 'GET',
             success: function (data) {
-                $('#countClass').val(data.class);
-                $('#countUser').val(data.user);
+                $('#countClass').text(data.class);
+                $('#countUser').text(data.user);
             }
         });
     }
