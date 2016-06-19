@@ -80,8 +80,6 @@ jQuery(document).ready(function ($) {
     function notify(err, msg) {
         if (err) {
             generate('error', msg);
-            generate('warning', msg);
-            console.log('EEEEEEEEEEEEEEEEEEEEEEEEEEE');
         } else {
             generate('success', msg);
         }
