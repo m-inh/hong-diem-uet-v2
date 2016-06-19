@@ -255,14 +255,18 @@ app.get('/api/count', function (req, res) {
         if (!err) {
             var countuser = results[0].countuser;
             connection.query("SELECT COUNT(*) AS countclass FROM class", function (err, results) {
-                console.log(results);
-                var countclass = results[0].countclass;
-                var count = {
-                    user: countuser,
-                    class: countclass
-                };
+                if (!err) {
+                    console.log(results);
+                    var countclass = results[0].countclass;
+                    var count = {
+                        user: countuser,
+                        class: countclass
+                    };
 
-                res.end(JSON.stringify(count));
+                    res.end(JSON.stringify(count));
+                } else {
+                    res.status(404).end("Error");
+                }
             });
         } else {
             res.status(404).end("Error");
