@@ -66,7 +66,7 @@ jQuery(document).ready(function ($) {
 
     function getCountClassUser() {
         $.ajax({
-            url: "/api/count",
+            url: url_ajax + "/count",
             method: 'GET',
             success: function (data) {
                 $('#countClass').val(data.class);
