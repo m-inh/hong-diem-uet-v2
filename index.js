@@ -41,6 +41,7 @@ var form = {
 
 app.post('/api/register', function (req, res) {
     var re_capcha = req.body['g-recaptcha-response'];
+    console.log(req);
     if (_.isEmpty(re_capcha)) {
         res.send('Re-capcha is not valid!');
         return;
