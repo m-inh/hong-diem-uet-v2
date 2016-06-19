@@ -61,7 +61,7 @@ jQuery(document).ready(function ($) {
             },
             dataType: 'json',
             success: function (res) {
-                notify(res.error, res.msg)
+                notify(res.err, res.msg)
             }
         });
     }
