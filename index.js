@@ -53,7 +53,7 @@ app.post('/api/register', function (req, res) {
     var mssv = req.body.msv;
     var email = req.body.email;
 
-    if (!validator.isEmail(email)) {
+    if (!validator.isEmail(email) || mssv.length != 8) {
         res.status(404).json({
             err: true,
             msg: 'Email is invalid!'
