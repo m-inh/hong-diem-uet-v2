@@ -53,7 +53,7 @@ app.post('/api/register', function (req, res) {
         res.status(404).end('Email is invalid!');
         return;
     }
-    
+
     if (!checkParam.checkParamValidate(mssv) || !checkParam.checkParamValidate(email)) {
         res.status(404).end("Something went wrong!");
         return;
@@ -357,7 +357,7 @@ function sendEmailActive(name, from, to, linkActive, callback) {
     content = new helper.Content("text/html", content_html);
     mail = new helper.Mail(from_email, subject, to_email, content);
 
-    var sg = require('sendgrid').SendGrid("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");
+    var sg = require('sendgrid').SendGrid(process.env.SG_KEY);
     var requestBody = mail.toJSON();
     var request = sg.emptyRequest();
     request.method = 'POST';
