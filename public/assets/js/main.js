@@ -59,7 +59,7 @@ jQuery(document).ready(function ($) {
             },
             dataType: 'json',
             success: function (res) {
-                alert('Success!');
+                notify(res.error, res.msg)
             }
         });
     }
@@ -72,6 +72,27 @@ jQuery(document).ready(function ($) {
                 $('#countClass').text(data.class);
                 $('#countUser').text(data.user);
             }
+        });
+    }
+
+    function notify(err, msg) {
+        if (err) {
+            generate('error', msg);
+        } else {
+            generate('success', msg);
+        }
+    }
+
+    function generate(type, msg) {
+        var n = noty({
+            text: msg,
+            type: type,
+            dismissQueue: true,
+            layout: 'topLeft',
+            theme: theme,
+            closeWith: ['button', 'click'],
+            maxVisible: 20,
+            modal: false
         });
     }
 
