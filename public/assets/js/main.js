@@ -1,9 +1,10 @@
 jQuery(document).ready(function ($) {
     $('body').on('valid.bs.validator', function (event) {
-        var x = event.relatedTarget.outerHTML;
-        if (x.indexOf('id="msv"') >= 0) {
-            loadTimetable();
+        var msv = $('#msv').val();
+        if (!msv || msv.length < 8) {
+            return;
         }
+        loadTimetable();
     });
 
     var msv = $('#msv').val();
@@ -12,22 +13,26 @@ jQuery(document).ready(function ($) {
     }
 
     $('.form_submit').on('submit', function (e) {
+        if ($('.btn_register').hasClass('disabled')) {
+            return;
+        }
         e.preventDefault();
 
         var msv = $('#msv').val();
         var email = $('#email').val();
-        register(msv, email);
+        var name = $('#name').val();
+        register(msv, email, name);
     });
 
     function loadTimetable() {
         var msv = $('#msv').val();
-        var url = url_ajax + '/getInfor?msv=' + msv;
+        var url = url_ajax + '/student/' + msv;
 
         $.ajax({
             url: url,
             method: 'GET',
             success: function (data) {
-                var time = data.timetable;
+                var time = data.subject_classes;
                 var nameSV = data.name;
                 var htmlTable = '';
                 for (var i = 0; i < time.length; i++) {
@@ -48,8 +53,8 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    function register(msv, email) {
-        var url_ajax_register = url_ajax + '/register';
+    function register(msv, email, name) {
+        var url_ajax_register = url_ajax + '/subscriber';
         var recaptcha = $('.g-recaptcha-response').val();
         $.ajax({
             method: 'POST',
@@ -57,6 +62,7 @@ jQuery(document).ready(function ($) {
             data: {
                 email: email,
                 msv: msv,
+                name: name,
                 'g-recaptcha-response': recaptcha
             },
             dataType: 'json',
@@ -101,5 +107,5 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    getCountClassUser();
+    // getCountClassUser();
 });
