@@ -34,17 +34,18 @@ module.exports.crawlClasses = function () {
 
                 let nameTemp = nameClass.split('(');
                 let nameTemp2 = "";
-                if (nameTemp.length > 1) {
-                    nameTemp2 = nameTemp[0].split('-')[0].trim();
-                } else {
-                    nameTemp2 = nameTemp.split('-')[0].trim();
+                let idClass = '';
+                if (nameTemp.length > 1 && nameTemp[0].split('-').length > 1) {
+                    let tempArr = nameTemp[0].split('-');
+                    idClass = tempArr.pop().trim().split(' ').join('').toLowerCase();
+                    nameTemp2 = tempArr.join(' - ').trim();
                 }
 
-                let idClass = removeUndeline(getIdClass(url_temp));
+                // let idClass = removeUndeline(getIdClass(url_temp));
                 if (idClass.length > 0) {
-                    if (idClass.length > 8) {
-                        idClass = idClass.substring(0, 8);
-                    }
+                    // if (idClass.length > 8) {
+                    //     idClass = idClass.substring(0, 8);
+                    // }
 
                     let tempClass = {
                         class_id: idClass,
@@ -53,9 +54,6 @@ module.exports.crawlClasses = function () {
                     };
 
                     classes.push(tempClass);
-                    // INSERT INTO class SET ?
-
-                    // UPDATE class SET ishasscore = ?, link = ? WHERE idclass = ?
                 }
 
             }

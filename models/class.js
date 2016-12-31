@@ -6,8 +6,7 @@ const Schema = mongoose.Schema;
 let Class = new Schema({
     code: {
         type: String,
-        unique: true,
-        require: true,
+        // unique: true,
         trim: true
     },
     name: {

@@ -1,26 +1,48 @@
 'use strict';
 
-const Mongoose = require('mongoose');
+require('dotenv').config();
 const async = require('async');
 
-const Class = Mongoose.model('Class');
-
+global.helpers = require('../helpers');
 let services = require('../services');
+const mongodb = require('../mongoose');
 
-services.classCrawler
-    .crawlClasses()
+mongodb()
+    .then(
+        message => {
+            console.log(message);
+            return services.classCrawler.crawlClasses();
+        }
+    )
+    .catch(error => console.log(error))
     .then(classes => {
+        const Mongoose = require('mongoose');
+        const Class = Mongoose.model('Class');
+
         async.each(classes,
-            tempClass => {
-                Class.findOneAndUpdate(
-                    {code: tempClass.class_id, is_has_score: false},
-                    {
+            (tempClass, next) => {
+                let query = {code: tempClass.class_id},
+                    update = {
+                        name: tempClass.name,
                         is_has_score: true,
                         link: tempClass.link
                     },
-                    {upsert: true})
-                    .then(updatedClass => console.log(updatedClass))
-                    .catch(err => console.log(err));
+                    options = {upsert: true, new: true, setDefaultsOnInsert: true};
+
+                Class.findOneAndUpdate(
+                    query,
+                    update,
+                    options)
+                    .then(updatedClass => {
+                        console.log(updatedClass);
+
+                        next();
+                    })
+                    .catch(err => {
+                        console.log(err);
+
+                        next(err);
+                    });
             },
             err => {
                 console.log(err);
