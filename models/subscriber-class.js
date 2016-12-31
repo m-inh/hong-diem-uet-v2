@@ -8,7 +8,7 @@ let SubscriberClass = new Schema({
         type: String,
         require: true
     },
-    subscriber_id: {
+    subscriber_email: {
         type: String,
         require: true
     },

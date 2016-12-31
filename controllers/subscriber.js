@@ -1,8 +1,10 @@
 'use strict';
 
 const Mongoose = require('mongoose');
+const async = require('async');
 
 let Subscriber = Mongoose.model('Subscriber');
+let SubscriberClass = Mongoose.model('SubscriberClass');
 let services = require('../services');
 let ResponseJSON = global.helpers.response;
 
@@ -17,28 +19,59 @@ module.exports.subscribe = (req, res) => {
     Subscriber
         .findOne({email})
         .then(checkSubscriber => {
-            if (checkSubscriber) return res.json(ResponseJSON().fail('Email đã có người đăng kí!'));
+            if (checkSubscriber) return Promise.reject('Email đã có người đăng kí!');
 
-            let subscriber = new Subscriber({
-                msv,
-                email,
-                name
-            });
-
-            subscriber
-                .save()
-                .then(newSubscriber => {
-                    let linkActive = HOST_NAME + `/api/subscriber/active/${newSubscriber.token}`;
-                    services.email.sendEmailActive(newSubscriber.email, newSubscriber.name, linkActive)
-                        .then(msg => {})
-                        .catch(err => console.log('Email fail: ' + newSubscriber.email));
-
-                    delete newSubscriber.token;
-                    res.json(ResponseJSON('Đăng kí thành công', newSubscriber));
-                })
-                .catch(error => res.json(ResponseJSON().fail(error)));
+            return services.studentCrawler.getInfoWithMssv(msv);
         })
-        .catch(err => res.json({err: true, msg: 'Something went wrong'}));
+        .then(
+            function (studentInfo ){
+                async.each(
+                    studentInfo.subject_classes,
+                    (tempClass, next) => {
+                        let sub_class = new SubscriberClass({
+                            class_id: tempClass.code.toLowerCase(),
+                            subscriber_email: email
+                        });
+
+                        sub_class.save()
+                            .then(newSubClass => {
+                                next();
+                            })
+                            .catch(err => next(err));
+                    },
+                    err => {
+                        if (err) return Promise.reject(err);
+
+                        let subscriber = new Subscriber({
+                            msv,
+                            email,
+                            name
+                        });
+
+                        return subscriber.save()
+                            .then(
+                                newSubscriber => {
+                                    let linkActive = HOST_NAME + `/api/subscriber/active/${newSubscriber.token}`;
+
+                                    services.email.sendEmailActive(newSubscriber.email, newSubscriber.name, linkActive)
+                                        .then(msg => {
+                                        })
+                                        .catch(err => console.log('Email fail: ' + newSubscriber.email));
+
+                                    return res.json(ResponseJSON('Đăng kí thành công', newSubscriber));
+                                }
+                            )
+                            .catch(error => {
+                                console.log(error);
+                                res.json(ResponseJSON().fail(error))
+                            });
+                    });
+            }
+        )
+        .catch(error => {
+            console.log(error);
+            res.json(ResponseJSON().fail(error))
+        });
 };
 
 module.exports.unSubscribe = (req, res) => {
@@ -53,13 +86,10 @@ module.exports.reactive = (req, res) => {
             if (subscriber.is_active) return res.send('Email đã được kích hoạt');
 
             let linkActive = HOST_NAME + `/api/subscriber/active/${subscriber.token}`;
-            services.email.sendEmailActive(subscriber.email, subscriber.name, linkActive)
-                .then(msg => {
-                    res.send(msg);
-                })
-                .catch(err => {
-                    res.send(err);
-                })
+            return services.email.sendEmailActive(subscriber.email, subscriber.name, linkActive);
+        })
+        .then(msg => {
+            res.send(msg);
         })
         .catch(err => {
             console.log(err);
@@ -76,22 +106,22 @@ module.exports.active = (req, res) => {
             if (subscriber.is_active) return res.send('Email đã được kích hoạt');
 
             subscriber.is_active = true;
-            subscriber.save()
-                .then(activeSuber => {
-                    console.log(activeSuber);
-                    return res.send('Kích hoạt thành công');
-                })
-                .catch(err => {
-                    return res.send('Something went wrong!');
-                });
+            return subscriber.save();
         })
         .catch(err => {
             return console.log(err);
+        })
+        .then(activeSuber => {
+            console.log(activeSuber);
+            return res.send('Kích hoạt thành công');
+        })
+        .catch(err => {
+            return res.send('Something went wrong!');
         });
 };
 
 module.exports.count = (req, res) => {
     Subscriber.count({})
         .then(numb => res.json(ResponseJSON('Success', {numb_of_subscriber: numb})))
-        .catch(err=> res.json(ResponseJSON().fail(err)));
+        .catch(err => res.json(ResponseJSON().fail(err)));
 };

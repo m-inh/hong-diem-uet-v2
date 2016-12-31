@@ -41,7 +41,6 @@ Subscriber.pre('save', function (next) {
     token.generateToken().then(
         tokenString => {
             self.token = tokenString;
-            console.log(tokenString);
 
             next();
         }
