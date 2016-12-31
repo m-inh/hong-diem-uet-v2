@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.1.4",
     "body-parser": "^1.15.1",
     "cheerio": "^0.20.0",
     "dotenv": "^2.0.0",

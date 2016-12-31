@@ -5,12 +5,12 @@ let express = require('express');
 let bodyParser = require('body-parser');
 
 let app = express();
-
 global.helpers = require('./helpers');
-
 const mongodb = require('./mongoose');
+
 mongodb()
-    .then((message) => {
+    .then(
+        message => {
             console.log(message);
 
             const routes = require('./routes');
@@ -21,8 +21,9 @@ mongodb()
             app.use('/api', routes);
 
             const PORT = process.env.PORT || 2345;
+            // Start server at PORT
             app.listen(PORT, () => {
-                console.log(`Listening on ${PORT}`);
+                console.log(`*listening on ${PORT}`);
             });
         }
     )

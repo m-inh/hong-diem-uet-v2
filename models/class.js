@@ -17,7 +17,11 @@ let Class = new Schema({
     is_has_score: {
         type: Boolean,
         default: false
-    }
+    },
+    link: {
+        type: String,
+        trim: true
+    },
 });
 
 mongoose.model('Class', Class);
