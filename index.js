@@ -20,6 +20,9 @@ mongodb()
             app.use(bodyParser.urlencoded({extended: true}));
             app.use('/api', routes);
 
+            // schedule
+            require('./scheduler');
+
             const PORT = process.env.PORT || 2345;
             // Start server at PORT
             app.listen(PORT, () => {
