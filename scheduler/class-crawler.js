@@ -16,6 +16,7 @@ mongodb()
     )
     .catch(error => console.log(error))
     .then(classes => {
+        console.log(classes);
         const Mongoose = require('mongoose');
         const Class = Mongoose.model('Class');
 

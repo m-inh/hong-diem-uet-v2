@@ -50,19 +50,39 @@ function checkSubscribers(dataHolder) {
 
 function checkEachSubscriber(subscriber, classHasScores) {
     async.each(subscriber.subject_classes,
-        (temClass, next) => {
-            for (let tempClassScore of classHasScores){
-                // console.log(temClass);
-                // console.log(classHasScores);
-                if (tempClassScore.code == temClass.class_id){
+        (tempClass, next) => {
+            for (let tempClassScore of classHasScores) {
+                if (!tempClass.is_send_mail && (tempClassScore.code == tempClass.class_id)) {
                     // send mail and next()
                     console.log(tempClassScore);
                     console.log('--------------');
+
+                    sendMailAndSave(subscriber, tempClass, tempClassScore);
                 }
             }
             next();
         },
         err => {
-            console.log(err);
+            if (err) console.log(err);
         });
+}
+
+function sendMailAndSave(subscriber, classSubscriber, classHasScore) {
+    let userInfo = {
+        name: subscriber.name,
+        email: subscriber.email,
+        class_name: classHasScore.name,
+        link: classHasScore.link
+    };
+
+    services.email
+        .sendNotiEmail(userInfo)
+        .then(
+            msg => {
+                classSubscriber.is_send_mail = true;
+                classSubscriber.save()
+                    .catch(err => console.log(err));
+            }
+        )
+        .catch(err => console.log(err));
 }

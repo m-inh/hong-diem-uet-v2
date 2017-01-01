@@ -73,7 +73,7 @@ module.exports.crawlClasses = function () {
                 crawlClassesById(idSemester)
                     .then(
                         classes => {
-                            tempClasses.push(classes);
+                            tempClasses = tempClasses.concat(classes);
 
                             next();
                         }

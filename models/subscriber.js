@@ -9,17 +9,14 @@ let Subscriber = new Schema({
     email: {
         type: String,
         unique: 'Email already exists',
-        require: true,
-        trim: true
+        require: true
     },
     msv: {
         type: String,
-        require: true,
-        trim: true
+        require: true
     },
     name: {
-        type: String,
-        trim: true
+        type: String
     },
     is_active: {
         type: Boolean,

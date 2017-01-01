@@ -7,19 +7,16 @@ let SubjectClass = new Schema({
     code: {
         type: String,
         // unique: true,
-        trim: true
     },
     name: {
-        type: String,
-        trim: true
+        type: String
     },
     is_has_score: {
         type: Boolean,
         default: false
     },
     link: {
-        type: String,
-        trim: true
+        type: String
     },
 });
 

@@ -7,19 +7,16 @@ let Student = new Schema({
     code: {
         type: String,
         unique: true,
-        require: true,
-        trim: true
+        require: true
     },
     name: {
-        type: String,
-        trim: true
+        type: String
     },
     birthday: {
         type: String
     },
     regular_class: {
-        type: String,
-        trim: true
+        type: String
     }
 });
 
