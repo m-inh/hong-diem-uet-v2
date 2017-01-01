@@ -17,6 +17,9 @@ let Student = new Schema({
     },
     regular_class: {
         type: String
+    },
+    subject_classes: {
+        type: [Schema.Types.Mixed]
     }
 });
 

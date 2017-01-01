@@ -24,7 +24,8 @@ module.exports.subscribe = (req, res) => {
             if (checkSubscriber) return Promise.reject('Email đã có người đăng kí!');
 
             return services.studentCrawler.getInfoWithMssv(msv);
-        }).then(studentInfo => {
+        })
+        .then(studentInfo => {
             let subscriber = new Subscriber({
                 msv,
                 email,
