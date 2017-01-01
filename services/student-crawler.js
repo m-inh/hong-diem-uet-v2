@@ -9,7 +9,7 @@ let url_get_infor = "https://112.137.129.87/congdaotao/module/dsthi_new/index.ph
 module.exports.getInfoWithMssv = function (mssv) {
     return new Promise((resolve, reject) => {
         if (mssv.length < 8) {
-            return reject('Ma so sinh vien khong dung');
+            return reject('Mã số sinh viên không đúng');
         }
 
         let form = {

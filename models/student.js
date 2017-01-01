@@ -20,7 +20,7 @@ let Student = new Schema({
     regular_class: {
         type: String,
         trim: true
-    },
+    }
 });
 
 mongoose.model('Student', Student);

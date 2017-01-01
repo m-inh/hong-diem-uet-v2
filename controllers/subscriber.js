@@ -11,67 +11,79 @@ let ResponseJSON = global.helpers.response;
 const HOST_NAME = process.env.HOST_NAME;
 
 module.exports.subscribe = (req, res) => {
-    // @todo validate
     let msv = req.body.msv;
     let email = req.body.email;
     let name = req.body.name;
 
-    Subscriber
-        .findOne({email})
+    if (msv.length != 8){
+        return res.json(ResponseJSON().fail('Không tồn tại mã số sinh viên'));
+    }
+
+    Subscriber.findOne({email})
         .then(checkSubscriber => {
             if (checkSubscriber) return Promise.reject('Email đã có người đăng kí!');
 
             return services.studentCrawler.getInfoWithMssv(msv);
-        })
-        .then(
-            function (studentInfo ){
-                async.each(
-                    studentInfo.subject_classes,
-                    (tempClass, next) => {
-                        let sub_class = new SubscriberClass({
-                            class_id: tempClass.code.toLowerCase(),
-                            subscriber_email: email
-                        });
+        }).then(studentInfo => {
+            let subscriber = new Subscriber({
+                msv,
+                email,
+                name
+            });
 
-                        sub_class.save()
-                            .then(newSubClass => {
+            subscriber
+                .save().then(newSubscriber => {
+                /**
+                 * tempClassArr store data model objects save in mongoDb
+                 * @type {Array}
+                 */
+                    let tempClassArr = [];
+                    async.each(
+                        studentInfo.subject_classes,
+                        (tempClass, next) => {
+                            let sub_class = new SubscriberClass({
+                                class_id: tempClass.code.toLowerCase(),
+                                subscriber_email: email
+                            });
+
+                            sub_class.save().then(newSubClass => {
+                                tempClassArr.push(newSubClass);
                                 next();
-                            })
-                            .catch(err => next(err));
-                    },
-                    err => {
-                        if (err) return Promise.reject(err);
+                            }).catch(err => next(err));
+                        },
+                        err => {
+                            if (err) return res.json(ResponseJSON().fail(err));
 
-                        let subscriber = new Subscriber({
-                            msv,
-                            email,
-                            name
-                        });
+                            /**
+                             * push each subject_class to subscriber
+                             * finally, call save()
+                             */
+                            for (let tempClass of tempClassArr){
+                                newSubscriber.subject_classes.push(tempClass);
+                            }
+                            newSubscriber.save()
+                                .then(pushedClass => {
+                                    console.log(pushedClass);
 
-                        return subscriber.save()
-                            .then(
-                                newSubscriber => {
+                                    // send email active
                                     let linkActive = HOST_NAME + `/api/subscriber/active/${newSubscriber.token}`;
-
                                     services.email.sendEmailActive(newSubscriber.email, newSubscriber.name, linkActive)
-                                        .then(msg => {
-                                        })
                                         .catch(err => console.log('Email fail: ' + newSubscriber.email));
 
                                     return res.json(ResponseJSON('Đăng kí thành công', newSubscriber));
-                                }
-                            )
-                            .catch(error => {
-                                console.log(error);
-                                res.json(ResponseJSON().fail(error))
-                            });
-                    });
-            }
-        )
-        .catch(error => {
-            console.log(error);
-            res.json(ResponseJSON().fail(error))
-        });
+                                })
+                                .catch(err => console.log(err));
+                        });
+                }
+            ).catch((err) => {
+                console.log(err);
+                return res.json(ResponseJSON().fail(err));
+            });
+        }
+    ).catch(error => {
+        console.log(error);
+        return res.json(ResponseJSON().fail(error));
+    });
 };
 
 module.exports.unSubscribe = (req, res) => {

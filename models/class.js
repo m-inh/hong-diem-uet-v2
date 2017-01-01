@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let Class = new Schema({
+let SubjectClass = new Schema({
     code: {
         type: String,
         // unique: true,
@@ -23,4 +23,4 @@ let Class = new Schema({
     },
 });
 
-mongoose.model('Class', Class);
+mongoose.model('Class', SubjectClass);

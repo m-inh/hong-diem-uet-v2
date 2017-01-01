@@ -2,17 +2,25 @@
 
 const request = require('request');
 const cheerio = require('cheerio');
+const async = require('async');
 
 const url_host = "http://www.coltech.vnu.edu.vn";
 const url_test = "http://www.coltech.vnu.edu.vn/news4st/test.php";
+const LIST_ID_SEMESTER = ['823', '822'];
 
-module.exports.crawlClasses = function () {
+/**
+ * 823 (HK I 2016-2017), 822 (HK II 2015-2016 - Kỳ thi phụ)
+ * @param idSemester
+ * @returns {Promise}
+ */
+
+function crawlClassesById(idSemester) {
     return new Promise((resolve, reject) => {
 
         let postPayload = {
             url: url_test,
             form: {
-                "lstClass": "820"
+                "lstClass": idSemester
             }
         };
 
@@ -41,51 +49,40 @@ module.exports.crawlClasses = function () {
                     nameTemp2 = tempArr.join(' - ').trim();
                 }
 
-                // let idClass = removeUndeline(getIdClass(url_temp));
                 if (idClass.length > 0) {
-                    // if (idClass.length > 8) {
-                    //     idClass = idClass.substring(0, 8);
-                    // }
-
                     let tempClass = {
                         class_id: idClass,
                         name: nameTemp2,
                         link: url_temp
                     };
-
                     classes.push(tempClass);
                 }
-
             }
-
             return resolve(classes);
         });
     })
+}
+
+module.exports.crawlClasses = function () {
+    let tempClasses = [];
+
+    return new Promise((resolve, reject) => {
+        async.each(
+            LIST_ID_SEMESTER,
+            (idSemester, next) => {
+                crawlClassesById(idSemester)
+                    .then(
+                        classes => {
+                            tempClasses.push(classes);
+
+                            next();
+                        }
+                    ).catch(err => next(err));
+            },
+            err => {
+                if (err) return reject(err);
+                return resolve(tempClasses);
+            }
+        )
+    })
 };
-
-function removeUndeline(string) {
-    string = string.toString().trim();
-    return string.split('_').join('');
-}
-
-function getIdClass(url) {
-    let urlString = url.toString();
-    let url1 = urlString.split('-');
-
-    if (url1.length == 2) {
-        return url1[1].substring(0, url1[1].length - 4);
-    }
-
-    if (url1.length > 2) {
-        let tempUrl = url1[url1.length - 1];
-        return tempUrl.substring(0, tempUrl.length - 4);
-    }
-
-    if (url1.length == 0) {
-        url1 = urlString.split('/');
-        let nameTemp = url1[url1.length - 1];
-        return nameTemp.substring(0, nameTemp.length - 4);
-    }
-
-    return '';
-}

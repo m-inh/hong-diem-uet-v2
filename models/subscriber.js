@@ -28,6 +28,7 @@ let Subscriber = new Schema({
     token: {
         type: String
     },
+    subject_classes: [{type: Schema.ObjectId, ref: 'SubscriberClass'}]
 });
 
 Subscriber.pre('save', function (next) {
