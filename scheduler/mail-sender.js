@@ -4,43 +4,12 @@
  * Mail-sender check class and subscriber to send email
  */
 
-require('dotenv').config();
 const async = require('async');
+const Mongoose = require('mongoose');
 
-global.helpers = require('../helpers');
 let services = require('../services');
-const mongodb = require('../mongoose');
-
-mongodb()
-    .then(
-        message => {
-            console.log(message);
-            const Mongoose = require('mongoose');
-            const Class = Mongoose.model('Class');
-            const Subscriber = Mongoose.model('Subscriber');
-
-            let dataHolder = {};
-
-            // Fetch data
-            Subscriber
-                .find({is_active: true})
-                .populate('subject_classes')
-                .exec()
-                .then(subscribers => {
-                    dataHolder.subscribers = subscribers;
-
-                    return Class.find({is_has_score: true}).exec();
-                })
-                .then(classes => {
-                    dataHolder.classes = classes;
-
-                    checkSubscribers(dataHolder);
-                })
-                .catch(err => console.log(err));
-
-        }
-    )
-    .catch(error => console.log(error));
+const Class = Mongoose.model('Class');
+const Subscriber = Mongoose.model('Subscriber');
 
 function checkSubscribers(dataHolder) {
     for (let subscriber of dataHolder.subscribers) {
@@ -86,3 +55,24 @@ function sendMailAndSave(subscriber, classSubscriber, classHasScore) {
         )
         .catch(err => console.log(err));
 }
+
+module.exports = function () {
+    let dataHolder = {};
+
+    // Fetch data
+    Subscriber
+        .find({is_active: true})
+        .populate('subject_classes')
+        .exec()
+        .then(subscribers => {
+            dataHolder.subscribers = subscribers;
+
+            return Class.find({is_has_score: true}).exec();
+        })
+        .then(classes => {
+            dataHolder.classes = classes;
+
+            checkSubscribers(dataHolder);
+        })
+        .catch(err => console.log(err));
+};
