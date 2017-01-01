@@ -1,10 +1,10 @@
 {
-  "name": "get_student_infor",
-  "version": "1.0.0",
+  "name": "hong_diem_v2",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",

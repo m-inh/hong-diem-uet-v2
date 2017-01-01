@@ -9,8 +9,6 @@ const Class = Mongoose.model('Class');
 module.exports = function () {
     services.classCrawler.crawlClasses()
         .then(classes => {
-            // console.log(classes);
-
             async.each(classes,
                 (tempClass, next) => {
                     let query = {code: tempClass.class_id},
@@ -37,7 +35,7 @@ module.exports = function () {
                         });
                 },
                 err => {
-                    console.log(err);
+                    if (err) console.log(err);
                 });
         })
         .catch(err => console.log(err));

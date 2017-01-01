@@ -5,7 +5,7 @@ const router = express.Router();
 const controllers = require('./controllers');
 
 module.exports = router
-// Subscriber
+    // Subscriber
     .post('/subscriber', controllers.subscriber.subscribe)
     .delete('/subscriber', controllers.subscriber.unSubscribe)
     .post('/subscriber/reactive', controllers.subscriber.reactive)
