@@ -30,19 +30,24 @@
     jQuery(document).ready(function ($) {
         function show_results() {
             var $results = $('.table_results');
-            var url_ajax_results = url_ajax + '/results';
+            var url_ajax_results = url_ajax + '/class';
             $.ajax({
                 method: 'GET',
                 url: url_ajax_results,
                 dataType: 'json',
                 success: function (res) {
                     var html = '';
-                    for (var i = 0; i < res.length; i++) {
+                    var listClass = res.data.classes;
+                    for (var i = 0; i < listClass.length; i++) {
                         var stt = i + 1;
-                        var subject = res[i];
+                        var subject = listClass[i];
+                        var class_code = subject.code.toUpperCase();
+                        if (class_code.length == 8 || class_code.length == 9){
+                            class_code = class_code.slice(0, 7) + ' ' + class_code.slice(7, class_code.length == 9 ? 8 : undefined);
+                        }
                         html += '<tr>' +
                                 '<td>' + stt + '</td>' +
-                                '<td><a href="' + subject.link + '" target="_blank">' + subject.id.toUpperCase() + '</a></td>' +
+                                '<td><a href="' + subject.link + '" target="_blank">' + class_code + '</a></td>' +
                                 '<td>' + subject.name + '</td>' +
                                 '</tr>';
                     }
