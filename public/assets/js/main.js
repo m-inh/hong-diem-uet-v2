@@ -72,13 +72,22 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    function getCountClassUser() {
+    function getCountClass() {
         $.ajax({
-            url: url_ajax + "/count",
+            url: url_ajax + "/class/count",
             method: 'GET',
-            success: function (data) {
-                $('#countClass').text(data.class);
-                $('#countUser').text(data.user);
+            success: function (res) {
+                $('#countClass').text(res.data.numb_of_class);
+            }
+        });
+    }
+
+    function getCountUser() {
+        $.ajax({
+            url: url_ajax + "/subscriber/count",
+            method: 'GET',
+            success: function (res) {
+                $('#countUser').text(res.data.numb_of_subscriber);
             }
         });
     }
@@ -107,5 +116,6 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    // getCountClassUser();
+    getCountClass();
+    getCountUser();
 });
