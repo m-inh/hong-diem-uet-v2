@@ -23,7 +23,7 @@ mongodb()
             const PORT = process.env.PORT || 2345;
             // Start server at PORT
             app.listen(PORT, () => {
-                console.log(`*listening on ${PORT}`);
+                console.log(`Listening on ${PORT}`);
             });
         }
     )

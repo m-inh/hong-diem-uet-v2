@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
     <title>Đăng ký nhận kết quả thi học kì</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css?v=3.3.7"/>
     <link rel="stylesheet" href="assets/css/style.css?v=1.0.0"/>
 </head>
 <body>
@@ -25,14 +26,19 @@
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-education"></span>
                                 </span>
-                                <input type="number" name="msv" id="msv" class="form-control" data-error="Mã số sinh viên không đúng! Hoặc đã có vấn đề gì đó đã xảy ra." data-minlength="8" maxlength="8" value="">
+                                <input type="number" name="msv" data-delay="1000" id="msv" class="form-control"
+                                       data-error="Vui lòng nhập mã số sinh viên khác."
+                                       data-minlength="8" maxlength="8" required value="" placeholder="Mã sinh viên">
                             </div>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
 
                     <div class="col-md-6">
-                        <div class="form-group"><label for="name">Họ và tên:</label> <input type="text" name="name" id="name" class="form-control" readonly></div>
+                        <div class="form-group"><label for="name">Họ và tên:</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Tên của bạn"
+                                   readonly>
+                        </div>
                     </div>
                 </div>
 
@@ -41,7 +47,8 @@
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-envelope"></span>
                         </span>
-                        <input type="email" name="email" class="form-control" id="email" data-error="Email chưa hợp lệ." required value=""></div>
+                        <input type="email" name="email" class="form-control" id="email" data-error="Email chưa hợp lệ."
+                               required value="" placeholder="Chúng tôi sẽ gửi thông báo về email này"></div>
                     <div class="help-block with-errors"></div>
                 </div>
 
@@ -54,7 +61,7 @@
                 </div>
 
                 <div class="form-group">
-                    <button class="btn btn-success btn-block btn_register" type="submit">Đăng ký</button>
+                    <button class="btn btn-success btn-block btn_register disabled" type="submit">Đăng ký</button>
                     <div class="reconfirm text-center" style="padding-top: 20px">
                         <a href="reactive.html">Gửi lại email xác nhận</a>
                     </div>
@@ -94,15 +101,15 @@
 <script src="assets/js/validator.min.js?v=0.9.0"></script>
 <script src="assets/js/jquery.noty.packaged.min.js?v=1.0"></script>
 <script src="assets/js/relax.js"></script>
-<script src="assets/js/main.js?v=1.0.1"></script>
+<script src="assets/js/main.js?v=1.0.0"></script>
 <script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
         a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
+            m = s.getElementsByTagName(o)[0];
         a.async = 1;
         a.src = g;
         m.parentNode.insertBefore(a, m)
@@ -110,7 +117,6 @@
 
     ga('create', 'UA-79575855-1', 'auto');
     ga('send', 'pageview');
-
 </script>
 </body>
 </html>
