@@ -19,7 +19,7 @@ function crawlStudentInfo(startCode, numbOfStudent, numbOfThread) {
         params.push(startCode + i);
     }
 
-    execParallel(services.studentCrawler.getInfoWithMssv, params)
+    execParallel(services.studentCrawler.getInfoWithCode, params)
         .then(
             studentArr => {
                 // console.log(studentArr);

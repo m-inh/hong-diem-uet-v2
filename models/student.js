@@ -65,7 +65,6 @@ function crawlAndSave(code) {
     studentCrawler.getInfoWithCode(code)
         .then(
             info => {
-                info.code = code;
                 /**
                  * Store student to database.
                  */
