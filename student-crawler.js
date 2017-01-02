@@ -8,8 +8,9 @@ global.helpers = require('./helpers');
 let services = require('./services');
 const mongodb = require('./mongoose');
 
-let START_CODE = 16020010;
+let START_CODE_ARRAY = [13020000, 14020000, 15020000, 16020000];
 let NUMBER_OF_THREAD = 80;
+let NUMBER_OF_STUDENT = 200;
 
 let currNumbOfStudent = 0;
 
@@ -31,12 +32,20 @@ function crawlStudentInfo(startCode, numbOfStudent, numbOfThread) {
 
                 // next section
                 currNumbOfStudent += numbOfThread;
-                let lastCodeOfThisSec = startCode += numbOfThread;
+                let lastCodeOfThisSec = startCode + numbOfThread;
 
                 if (currNumbOfStudent < numbOfStudent)
                     crawlStudentInfo(lastCodeOfThisSec, numbOfStudent, numbOfThread);
-                else
+                else if (START_CODE_ARRAY.length > 0) {
+                    // crawl another K
+                    currNumbOfStudent = 0;
+                    crawlStudentInfo(START_CODE_ARRAY.pop(), NUMBER_OF_STUDENT, NUMBER_OF_THREAD);
+                } else {
                     console.log('------------crawl done----------');
+
+                    // exit crawler
+                    process.exit(1);
+                }
             }
         )
         .catch(
@@ -83,7 +92,7 @@ function saveStudentInfoToDb(studentArr) {
                     }
                 )
                 .catch(err => {
-                    console.log(err);
+                    // console.log(err);
 
                     next();
                 });
@@ -104,7 +113,7 @@ mongodb().then(
         Subscriber = Mongoose.model('Subscriber');
         Student = Mongoose.model('Student');
 
-        crawlStudentInfo(START_CODE, 500, NUMBER_OF_THREAD);
+        crawlStudentInfo(START_CODE_ARRAY.pop(), NUMBER_OF_STUDENT, NUMBER_OF_THREAD);
 
     }
 ).catch(error => console.log(error));

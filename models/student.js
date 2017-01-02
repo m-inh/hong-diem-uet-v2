@@ -84,4 +84,15 @@ function crawlAndSave(code) {
     return deferred.promise;
 }
 
+let handleE11000 = function (error, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+        next('Student already existed');
+    } else {
+        next();
+    }
+
+};
+
+Student.post('save', handleE11000);
+
 mongoose.model('Student', Student);
