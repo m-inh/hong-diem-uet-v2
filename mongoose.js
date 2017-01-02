@@ -2,13 +2,16 @@
 
 const Mongoose = require('mongoose');
 const Glob = require('glob');
-const cachegoose = require('cachegoose');
 
-cachegoose(Mongoose, {
-    engine: 'redis',
-    port: 6379,
-    host: 'localhost'
-});
+let enableCache = process.env.ENABLE_CACHE || false;
+if (enableCache) {
+    const cachegoose = require('cachegoose');
+    cachegoose(Mongoose, {
+        engine: 'redis',
+        port: 6379,
+        host: 'localhost'
+    });
+}
 
 module.exports = () => {
     return new Promise((resolve, reject) => {
