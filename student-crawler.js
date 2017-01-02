@@ -10,7 +10,7 @@ const mongodb = require('./mongoose');
 
 let START_CODE_ARRAY = [13020000, 14020000, 15020000, 16020000];
 let NUMBER_OF_THREAD = 80;
-let NUMBER_OF_STUDENT = 200;
+let NUMBER_OF_STUDENT = 2000;
 
 let currNumbOfStudent = 0;
 
