@@ -35,6 +35,8 @@ function crawlStudentInfo(startCode, numbOfStudent, numbOfThread) {
 
                 if (currNumbOfStudent < numbOfStudent)
                     crawlStudentInfo(lastCodeOfThisSec, numbOfStudent, numbOfThread);
+                else
+                    console.log('------------crawl done----------');
             }
         )
         .catch(
