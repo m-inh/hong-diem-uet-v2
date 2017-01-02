@@ -70,7 +70,7 @@ module.exports.subscribe = (req, res) => {
                                     services.email.sendEmailActive(newSubscriber.email, newSubscriber.name, linkActive)
                                         .catch(err => console.log('Email fail: ' + newSubscriber.email));
 
-                                    return res.json(ResponseJSON('Đăng kí thành công', newSubscriber));
+                                    return res.json(ResponseJSON('Đăng kí thành công, xác nhận email tại hòm thư để hoàn tất!', newSubscriber));
                                 })
                                 .catch(err => console.log(err));
                         });
