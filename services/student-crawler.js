@@ -6,7 +6,7 @@ const cheerio = require('cheerio');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 let url_get_infor = "https://112.137.129.87/congdaotao/module/dsthi_new/index.php";
 
-module.exports.getInfoWithMssv = function (mssv) {
+module.exports.getInfoWithCode = function (mssv) {
     return new Promise((resolve, reject) => {
         if (mssv.length < 8) {
             return reject('Mã số sinh viên không đúng');
@@ -43,7 +43,7 @@ function parseStudentInfo(bodyHtml) {
 
         let trArr = $('tbody > tr');
         if (trArr.length <= 1) {
-            return reject('Khong ton tai msv');
+            return reject('Không tồn tại sinh viên này, vui lòng thử lại!');
         }
 
         let trTemp = $(trArr);

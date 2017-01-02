@@ -1,15 +1,14 @@
 'use strict';
 
-const services = require('../services');
+const Mongoose = require('mongoose');
+const Student = Mongoose.model('Student');
 
 module.exports.getInfo = (req, res) => {
-    services.studentCrawler.getInfoWithMssv(req.params.msv)
+    Student.getStudentByCode(req.params.msv)
         .then(student => {
-            return res.json(student);
+            res.json(student);
         })
         .catch(err => {
-            return res
-                .status(400)
-                .json({error: true, msg: err});
+            res.json({error: true, msg: err});
         });
 };

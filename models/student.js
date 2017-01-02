@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Q = require('q');
+const studentCrawler = require('../services/student-crawler');
 
 let Student = new Schema({
     code: {
@@ -26,5 +28,61 @@ let Student = new Schema({
         type: Number
     }
 });
+
+Student.statics.getStudentByCode = function (code) {
+    let deferred = Q.defer();
+
+    this.findOne({code: code})
+        .then(
+            student => {
+                if (student) {
+                    return deferred.resolve(student);
+                }
+
+                crawlAndSave(code)
+                    .then(
+                        student_ => {
+                            deferred.resolve(student_);
+                        }
+                    )
+                    .catch(
+                        error => deferred.reject(error)
+                    );
+            }
+        )
+        .catch(
+            error => {
+                deferred.reject(error);
+            }
+        );
+
+    return deferred.promise;
+};
+
+function crawlAndSave(code) {
+    let deferred = Q.defer();
+
+    studentCrawler.getInfoWithCode(code)
+        .then(
+            info => {
+                info.code = code;
+                /**
+                 * Store student to database.
+                 */
+                let Student_ = mongoose.model('Student');
+                let student_ = new Student_(info);
+                student_.save();
+
+                deferred.resolve(info);
+            }
+        )
+        .catch(
+            error => {
+                deferred.reject(error);
+            }
+        );
+
+    return deferred.promise;
+}
 
 mongoose.model('Student', Student);
