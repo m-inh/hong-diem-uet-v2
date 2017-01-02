@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "crawl": "node ./bin/crawler",
     "prestart": "npm install",
     "start": "node index.js"
   },

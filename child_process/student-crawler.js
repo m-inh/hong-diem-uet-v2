@@ -4,13 +4,14 @@ require('dotenv').config();
 const async = require('async');
 const Mongoose = require('mongoose');
 
-global.helpers = require('./helpers');
-let services = require('./services');
-const mongodb = require('./mongoose');
+global.helpers = require('./../helpers');
+console.log = global.log;
+let services = require('./../services');
+const mongodb = require('./../mongoose');
 
 let START_CODE_ARRAY = [13020000, 14020000, 15020000, 16020000];
-let NUMBER_OF_THREAD = 80;
-let NUMBER_OF_STUDENT = 2000;
+let NUMBER_OF_THREAD = 2;
+let NUMBER_OF_STUDENT = 1;
 
 let currNumbOfStudent = 0;
 
@@ -44,7 +45,8 @@ function crawlStudentInfo(startCode, numbOfStudent, numbOfThread) {
                     console.log('------------crawl done----------');
 
                     // exit crawler
-                    process.exit(1);
+                    // process.exit(1);
+                    Mongoose.connection.close();
                 }
             }
         )
