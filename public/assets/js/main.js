@@ -46,6 +46,10 @@
                         var name = time[i].name;
                         var stt = i + 1;
 
+                        if (code.length == 8 || code.length == 9) {
+                            code = code.slice(0, 7) + ' ' + code.slice(7, code.length == 9 ? 8 : undefined);
+                        }
+
                         htmlTable += '<tr>' +
                             '<td>' + stt + '</td>'
                             + '<td>' + code + '</td>'
