@@ -124,7 +124,7 @@
                 text: msg,
                 type: type,
                 dismissQueue: true,
-                timeout: 800,
+                timeout: 5000,
                 layout: 'topLeft',
                 theme: 'relax',
                 closeWith: ['button', 'click'],
