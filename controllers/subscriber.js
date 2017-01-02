@@ -23,7 +23,7 @@ module.exports.subscribe = (req, res) => {
         .then(checkSubscriber => {
             if (checkSubscriber) return Promise.reject('Email đã có người đăng kí!');
 
-            return services.studentCrawler.getInfoWithMssv(msv);
+            return services.studentCrawler.getInfoWithCode(msv);
         })
         .then(studentInfo => {
             let subscriber = new Subscriber({
