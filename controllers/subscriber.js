@@ -115,21 +115,19 @@ module.exports.active = (req, res) => {
 
     Subscriber.findOne({token})
         .then(subscriber => {
-            if (!subscriber) return res.send('Đã có lỗi xảy ra');
-            if (subscriber.is_active) return res.send('Email đã được kích hoạt');
+            if (!subscriber) return Promise.reject('Đã có lỗi xảy ra');
+            if (subscriber.is_active) return Promise.reject('Email đã được kích hoạt');
 
             subscriber.is_active = true;
             return subscriber.save();
-        })
-        .catch(err => {
-            return console.log(err);
         })
         .then(activeSuber => {
             console.log(activeSuber);
             return res.send('Kích hoạt thành công');
         })
         .catch(err => {
-            return res.send('Something went wrong!');
+            console.log(err);
+            return res.send(err);
         });
 };
 
