@@ -5,6 +5,8 @@ const Glob = require('glob');
 
 let enableCache = process.env.ENABLE_CACHE || false;
 if (enableCache) {
+    console.log('Enable cache with redis');
+
     const cachegoose = require('cachegoose');
     cachegoose(Mongoose, {
         engine: 'redis',
