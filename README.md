@@ -4,8 +4,11 @@ Tool hóng điểm thi viết bằng NodeJS, sử dụng MongoDB làm cơ sở d
 
 Mỗi khi có lớp học được công bố điểm, hệ thống sẽ gửi một email thông báo tới người dùng đăng kí (subscriber)
 
+Demo: [tại đây](http://hongdiem.uetf.me/)
+
 ## Sử dụng tool
 Bạn cần cài đặt môi trường chạy NodeJS, MongoDB và một API key của SendGrid
+
 ### Tạo tệp `.env` ở thư mục gốc
 Tệp `.env` chứa các thông tin config cơ bản của hệ thống
 ```
