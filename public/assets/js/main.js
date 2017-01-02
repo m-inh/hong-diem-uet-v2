@@ -32,6 +32,12 @@
                 url: url,
                 method: 'GET',
                 success: function (data) {
+                    $('#timetable').removeClass('running');
+
+                    if (data.error) {
+                        return notify(data.error, data.msg);
+                    }
+
                     var time = data.subject_classes;
                     var nameSV = data.name;
                     var htmlTable = '';
@@ -49,7 +55,6 @@
 
                     $('#name').val(nameSV);
                     $('#timetable tbody').html(htmlTable);
-                    $('#timetable').removeClass('running');
                 },
                 error: function () {
                     $('#timetable').removeClass('running');
@@ -119,6 +124,7 @@
                 text: msg,
                 type: type,
                 dismissQueue: true,
+                timeout: 800,
                 layout: 'topLeft',
                 theme: 'relax',
                 closeWith: ['button', 'click'],
