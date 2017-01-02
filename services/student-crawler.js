@@ -48,11 +48,13 @@ function parseStudentInfo(bodyHtml) {
 
         let trTemp = $(trArr);
         let tdArr = trTemp.children('td');
+        let chooseCodeTd = $(tdArr[1]);
         let chooseNameTd = $(tdArr[2]);
         let chooseBirthTd = $(tdArr[3]);
         let chooseLopTd = $(tdArr[4]);
 
         if (chooseNameTd.text().length != 0) {
+            let code = chooseCodeTd.text().toString().trim();
             let name = chooseNameTd.text().toString().trim();
             let birth = chooseBirthTd.text().toString().trim();
             let regular_class = chooseLopTd.text().toString().trim();
@@ -78,6 +80,7 @@ function parseStudentInfo(bodyHtml) {
             }
 
             resolve({
+                code: code,
                 name: name,
                 birth: birth,
                 regular_class: regular_class,
