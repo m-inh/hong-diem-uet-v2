@@ -12,10 +12,11 @@ Bạn cần cài đặt môi trường chạy NodeJS, MongoDB và một API key 
 ### Tạo tệp `.env` ở thư mục gốc
 Tệp `.env` chứa các thông tin config cơ bản của hệ thống
 ```
-HOST_NAME=localhost
-PORT=3000
-MONGODB_URI=localhost:27017/uet
-SG_KEY=bla.bla
+HOST_NAME = localhost
+PORT = 3000
+MONGODB_URI = localhost:27017/uet
+ENABLE_CACHE = false
+SG_KEY = bla.bla
 ```
 
 ### Chạy tool
