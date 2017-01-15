@@ -15,7 +15,6 @@ Tệp `.env` chứa các thông tin config cơ bản của hệ thống
 HOST_NAME = localhost
 PORT = 3000
 MONGODB_URI = localhost:27017/uet
-ENABLE_CACHE = false
 SG_KEY = bla.bla
 ```
 
