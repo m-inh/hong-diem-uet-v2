@@ -18,6 +18,11 @@ MONGODB_URI = localhost:27017/uet
 SG_KEY = bla.bla
 ```
 
+### Crawl dữ liệu sinh viên
+```
+npm run crawl
+```
+
 ### Chạy tool
 Gõ câu lệnh dưới đây vào cửa sổ dòng lệnh
 ```

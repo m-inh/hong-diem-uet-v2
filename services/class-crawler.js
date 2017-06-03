@@ -6,7 +6,7 @@ const async = require('async');
 
 const url_host = "http://www.coltech.vnu.edu.vn";
 const url_test = "http://www.coltech.vnu.edu.vn/news4st/test.php";
-const LIST_ID_SEMESTER = ['823', '822'];
+const LIST_ID_SEMESTER = ['825'];
 
 /**
  * 823 (HK I 2016-2017), 822 (HK II 2015-2016 - Kỳ thi phụ)
